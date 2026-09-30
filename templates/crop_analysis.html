@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriSense - Crop Analysis</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0d1628;
+            color: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            height: 86px;
+            background: #063f3b;
+            border-bottom: 1px solid #284554;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            font-size: 32px;
+        }
+
+        .brand-text h1 {
+            color: #19d39b;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .brand-text p {
+            color: #9ab5c7;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav a {
+            color: #9eb4c9;
+            text-decoration: none;
+
+            padding: 14px 15px;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            border-radius: 7px;
+
+            transition: 0.2s ease;
+        }
+
+        .nav a:hover {
+            color: #ffffff;
+            background: #12334a;
+        }
+
+        .nav a.active {
+            background: #183b4d;
+            color: #ffffff;
+        }
+
+        .nav a.logout {
+            color: #ff7777;
+            margin-left: 6px;
+        }
+
+        .nav a.logout:hover {
+            background: #3b2027;
+            color: #ff8b8b;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+
+            padding: 34px 25px 60px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #8ea8bd;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            background: #103c3b;
+            border: 1px solid #176b5b;
+            color: #20d39c;
+
+            padding: 9px 14px;
+            border-radius: 7px;
+
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           SECTION TITLE
+        ========================= */
+
+        .section-title {
+            font-size: 14px;
+            color: #f0f4fa;
+
+            margin-bottom: 12px;
+
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: #1c293c;
+            border: 1px solid #304157;
+
+            border-radius: 11px;
+
+            padding: 22px;
+
+            margin-bottom: 20px;
+
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-title .icon {
+            font-size: 18px;
+        }
+
+        .card-subtitle {
+            color: #839bb1;
+            font-size: 11px;
+        }
+
+        /* =========================
+           SENSOR GRID
+        ========================= */
+
+        .sensor-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .input-group label {
+            color: #9fb3c6;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+
+            background: #111d2e;
+
+            border: 1px solid #3a4b60;
+
+            color: #f3f7fb;
+
+            padding: 12px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #16c995;
+
+            box-shadow: 0 0 0 2px rgba(22, 201, 149, 0.08);
+        }
+
+        .input-group input::placeholder {
+            color: #60758a;
+        }
+
+        .unit {
+            color: #647e95;
+            font-size: 9px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-top: 22px;
+        }
+
+        .button {
+            border: none;
+
+            padding: 12px 19px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .button-secondary {
+            background: #25374c;
+            color: #b6c9da;
+            border: 1px solid #3b4e63;
+        }
+
+        .button-secondary:hover {
+            background: #30455b;
+            color: #ffffff;
+        }
+
+        .button-primary {
+            background: #12b98d;
+            color: #061b1a;
+        }
+
+        .button-primary:hover {
+            background: #19d39b;
+            transform: translateY(-1px);
+        }
+
+        .button-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =========================
+           RESULT AREA
+        ========================= */
+
+        #resultSection {
+            display: none;
+        }
+
+        .result-grid {
+            display: grid;
+
+            grid-template-columns: 1.1fr 0.9fr;
+
+            gap: 20px;
+        }
+
+        /* =========================
+           RECOMMENDATION CARD
+        ========================= */
+
+        .recommendation {
+            background: #172d32;
+
+            border: 1px solid #1e6657;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .recommendation::after {
+            content: "";
+
+            position: absolute;
+
+            width: 130px;
+            height: 130px;
+
+            right: -50px;
+            top: -50px;
+
+            background: rgba(20, 211, 155, 0.06);
+
+            border-radius: 50%;
+        }
+
+        .recommendation-label {
+            color: #8eabb1;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+
+            margin-bottom: 10px;
+        }
+
+        .crop-name {
+            color: #20d49c;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            text-transform: capitalize;
+
+            margin-bottom: 18px;
+        }
+
+        .confidence-label {
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #9bb2c2;
+
+            font-size: 11px;
+
+            margin-bottom: 7px;
+        }
+
+        .confidence-value {
+            color: #20d49c;
+
+            font-weight: bold;
+        }
+
+        .progress {
+            height: 8px;
+
+            width: 100%;
+
+            background: #0d1d2a;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+
+            width: 0%;
+
+            background: #18c995;
+
+            border-radius: 20px;
+
+            transition: width 0.7s ease;
+        }
+
+        .confidence-note {
+            color: #70899d;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+
+            margin-top: 12px;
+        }
+
+        /* =========================
+           TOP 5
+        ========================= */
+
+        .prediction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .prediction-item {
+            display: grid;
+
+            grid-template-columns: 25px 1fr 55px;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+        .prediction-rank {
+            color: #728ba1;
+
+            font-size: 11px;
+        }
+
+        .prediction-info {
+            min-width: 0;
+        }
+
+        .prediction-name {
+            color: #dbe5ee;
+
+            font-size: 12px;
+
+            text-transform: capitalize;
+
+            margin-bottom: 5px;
+        }
+
+        .prediction-track {
+            width: 100%;
+
+            height: 5px;
+
+            background: #101c2b;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .prediction-fill {
+            height: 100%;
+
+            background: #278fd1;
+
+            border-radius: 10px;
+
+            width: 0%;
+
+            transition: width 0.5s ease;
+        }
+
+        .prediction-percent {
+            color: #78a9ca;
+
+            font-size: 11px;
+
+            text-align: right;
+        }
+
+        /* =========================
+           FIELD CONDITIONS
+        ========================= */
+
+        .condition-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .condition {
+            background: #152235;
+
+            border: 1px solid #2d4055;
+
+            border-radius: 8px;
+
+            padding: 14px;
+        }
+
+        .condition-name {
+            color: #829bb0;
+
+            font-size: 10px;
+
+            margin-bottom: 7px;
+        }
+
+        .condition-value {
+            color: #edf3f8;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            text-transform: capitalize;
+        }
+
+        .condition-status {
+            color: #1ed09a;
+
+            font-size: 10px;
+
+            margin-top: 5px;
+        }
+
+        /* =========================
+           GUIDANCE
+        ========================= */
+
+        .guidance-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .guidance-box {
+            background: #152235;
+
+            border: 1px solid #2c3f54;
+
+            border-radius: 8px;
+
+            padding: 17px;
+        }
+
+        .guidance-box h4 {
+            color: #cbd9e5;
+
+            font-size: 12px;
+
+            margin-bottom: 8px;
+        }
+
+        .guidance-box p {
+            color: #849db2;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error-box {
+            display: none;
+
+            background: #351d27;
+
+            border: 1px solid #713442;
+
+            color: #ff9aa9;
+
+            border-radius: 8px;
+
+            padding: 14px;
+
+            font-size: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            display: none;
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #8ca6ba;
+
+            font-size: 12px;
+        }
+
+        .spinner {
+            display: inline-block;
+
+            width: 18px;
+            height: 18px;
+
+            border: 2px solid #395066;
+
+            border-top-color: #18ca96;
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+
+            vertical-align: middle;
+
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           FOOTER NOTE
+        ========================= */
+
+        .footer-note {
+            color: #536d83;
+
+            font-size: 10px;
+
+            text-align: center;
+
+            margin-top: 25px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .header {
+                height: auto;
+
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .nav {
+                width: 100%;
+
+                overflow-x: auto;
+
+                padding-bottom: 3px;
+            }
+
+            .nav a {
+                white-space: nowrap;
+            }
+
+            .sensor-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .condition-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .guidance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .main {
+                padding: 25px 15px 45px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .sensor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .condition-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .button-row {
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 10px;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .card {
+                padding: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🌱
+        </div>
+
+        <div class="brand-text">
+            <h1>AGriSense</h1>
+            <p>Smart Agriculture Intelligence</p>
+        </div>
+
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/crop-analysis" class="active">
+            Crop Analysis
+        </a>
+
+        <a href="/disease-detection">
+            Disease Detection
+        </a>
+
+        <a href="/ai-advisor">
+            AI Advisor
+        </a>
+
+        <a href="/history">
+            History
+        </a>
+
+        <a href="/about">
+            About
+        </a>
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div class="page-title">
+
+            <h2>
+                Crop & Soil Analysis
+            </h2>
+
+            <p>
+                Enter soil and environmental conditions to receive
+                a machine learning based crop recommendation.
+            </p>
+
+        </div>
+
+        <div class="status-badge">
+            ● MODEL ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         INPUT SECTION
+    ================================================== -->
+
+    <div class="section-title">
+        Soil & Environmental Parameters
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+                <span class="icon">🌾</span>
+                Crop Prediction Inputs
+            </div>
+
+            <div class="card-subtitle">
+                Random Forest Classification
+            </div>
+
+        </div>
+
+
+        <div class="sensor-grid">
+
+            <!-- N -->
+
+            <div class="input-group">
+
+                <label>
+                    Nitrogen (N)
+                </label>
+
+                <input
+                    type="number"
+                    id="nitrogen"
+                    step="0.01"
+                    placeholder="e.g. 90"
+                >
+
+                <span class="unit">
+                    Soil nutrient value
+                </span>
+
+            </div>
+
+
+            <!-- P -->
+
+            <div class="input-group">
+
+                <label>
+                    Phosphorus (P)
+                </label>
+
+                <input
+                    type="number"
+                    id="phosphorus"
+                    step="0.01"
+                    placeholder="e.g. 42"
+                >
+
+                <span class="unit">
+                    Soil nutrient value
+                </span>
+
+            </div>
+
+
+            <!-- K -->
+
+            <div class="input-group">
+
+                <label>
+                    Potassium (K)
+                </label>
+
+                <input
+                    type="number"
+                    id="potassium"
+                    step="0.01"
+                    placeholder="e.g. 43"
+                >
+
+                <span class="unit">
+                    Soil nutrient value
+                </span>
+
+            </div>
+
+
+            <!-- Temperature -->
+
+            <div class="input-group">
+
+                <label>
+                    Temperature
+                </label>
+
+                <input
+                    type="number"
+                    id="temperature"
+                    step="0.01"
+                    placeholder="e.g. 27"
+                >
+
+                <span class="unit">
+                    °C
+                </span>
+
+            </div>
+
+
+            <!-- Humidity -->
+
+            <div class="input-group">
+
+                <label>
+                    Humidity
+                </label>
+
+                <input
+                    type="number"
+                    id="humidity"
+                    step="0.01"
+                    placeholder="e.g. 75"
+                >
+
+                <span class="unit">
+                    %
+                </span>
+
+            </div>
+
+
+            <!-- pH -->
+
+            <div class="input-group">
+
+                <label>
+                    Soil pH
+                </label>
+
+                <input
+                    type="number"
+                    id="ph"
+                    step="0.01"
+                    placeholder="e.g. 6.5"
+                >
+
+                <span class="unit">
+                    pH scale
+                </span>
+
+            </div>
+
+
+            <!-- Rainfall -->
+
+            <div class="input-group">
+
+                <label>
+                    Rainfall
+                </label>
+
+                <input
+                    type="number"
+                    id="rainfall"
+                    step="0.01"
+                    placeholder="e.g. 200"
+                >
+
+                <span class="unit">
+                    mm
+                </span>
+
+            </div>
+
+
+            <!-- Planned Crop -->
+
+            <div class="input-group">
+
+                <label>
+                    Planned Crop
+                </label>
+
+                <select id="planned_crop">
+
+                    <option value="">
+                        Not specified
+                    </option>
+
+                    <option value="apple">Apple</option>
+                    <option value="banana">Banana</option>
+                    <option value="blackgram">Blackgram</option>
+                    <option value="chickpea">Chickpea</option>
+                    <option value="coconut">Coconut</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="cotton">Cotton</option>
+                    <option value="grapes">Grapes</option>
+                    <option value="jute">Jute</option>
+                    <option value="kidneybeans">Kidney Beans</option>
+                    <option value="lentil">Lentil</option>
+                    <option value="maize">Maize</option>
+                    <option value="mango">Mango</option>
+                    <option value="mothbeans">Moth Beans</option>
+                    <option value="mungbean">Mung Bean</option>
+                    <option value="muskmelon">Muskmelon</option>
+                    <option value="orange">Orange</option>
+                    <option value="papaya">Papaya</option>
+                    <option value="pigeonpeas">Pigeon Peas</option>
+                    <option value="pomegranate">Pomegranate</option>
+                    <option value="rice">Rice</option>
+                    <option value="watermelon">Watermelon</option>
+
+                </select>
+
+                <span class="unit">
+                    Optional
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="button-row">
+
+            <button
+                type="button"
+                class="button button-secondary"
+                onclick="useLatestSensors()"
+            >
+                ↻ Use Latest Sensor Data
+            </button>
+
+
+            <button
+                type="button"
+                class="button button-primary"
+                id="analyzeButton"
+                onclick="analyzeCrop()"
+            >
+                Analyze Crop →
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        class="error-box"
+        id="errorBox"
+    ></div>
+
+
+    <!-- LOADING -->
+
+    <div
+        class="loading"
+        id="loading"
+    >
+        <span class="spinner"></span>
+        Running crop prediction model...
+    </div>
+
+
+    <!-- =================================================
+         RESULTS
+    ================================================== -->
+
+    <section id="resultSection">
+
+        <div class="section-title">
+            Analysis Results
+        </div>
+
+
+        <div class="result-grid">
+
+
+            <!-- RECOMMENDATION -->
+
+            <div class="recommendation">
+
+                <div class="recommendation-label">
+                    Recommended Crop
+                </div>
+
+                <div
+                    class="crop-name"
+                    id="recommendedCrop"
+                >
+                    —
+                </div>
+
+
+                <div class="confidence-label">
+
+                    <span>
+                        Model Confidence
+                    </span>
+
+                    <span
+                        class="confidence-value"
+                        id="confidenceText"
+                    >
+                        0%
+                    </span>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        id="confidenceBar"
+                    ></div>
+
+                </div>
+
+
+                <p class="confidence-note">
+                    The confidence value represents the probability
+                    produced by the trained classification model.
+                    It is not a guaranteed measure of crop suitability.
+                </p>
+
+            </div>
+
+
+            <!-- TOP 5 -->
+
+            <div class="card" style="margin-bottom: 0;">
+
+                <div class="card-header">
+
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        Top Predictions
+                    </div>
+
+                </div>
+
+                <div
+                    class="prediction-list"
+                    id="predictionList"
+                >
+
+                    <div style="color:#70899d;font-size:12px;">
+                        Predictions will appear here.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FIELD CONDITIONS
+        ================================================== -->
+
+        <div class="card" style="margin-top:20px;">
+
+            <div class="card-header">
+
+                <div class="card-title">
+                    <span class="icon">🌱</span>
+                    Field Conditions
+                </div>
+
+            </div>
+
+
+            <div
+                class="condition-grid"
+                id="conditionGrid"
+            >
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             GUIDANCE
+        ================================================== -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div class="card-title">
+                    <span class="icon">💡</span>
+                    Agricultural Guidance
+                </div>
+
+            </div>
+
+
+            <div class="guidance-grid">
+
+                <div class="guidance-box">
+
+                    <h4>
+                        💧 Irrigation
+                    </h4>
+
+                    <p id="irrigationText">
+                        —
+                    </p>
+
+                </div>
+
+
+                <div class="guidance-box">
+
+                    <h4>
+                        🦠 Disease Risk
+                    </h4>
+
+                    <p id="diseaseRiskText">
+                        —
+                    </p>
+
+                </div>
+
+
+                <div class="guidance-box">
+
+                    <h4>
+                        🌾 Crop Advice
+                    </h4>
+
+                    <p id="cropAdviceText">
+                        —
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="card"
+            id="plannedCropCard"
+            style="display:none;"
+        >
+
+            <div class="card-header">
+
+                <div class="card-title">
+                    <span class="icon">📌</span>
+                    Planned Crop
+                </div>
+
+            </div>
+
+            <p
+                id="plannedCropText"
+                style="color:#20d49c;font-size:16px;font-weight:600;text-transform:capitalize;"
+            ></p>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer-note">
+        AgriSense AI • Smart Agriculture Intelligence System
+    </div>
+
+</main>
+
+
+<script>
+
+    /* =====================================================
+       LATEST SENSOR DATA FROM FLASK
+    ===================================================== */
+
+    const latestSensors =
+        {{ (latest_sensors or {}) | tojson }};
+
+
+    /* =====================================================
+       HELPER
+    ===================================================== */
+
+    function setValue(id, value) {
+
+        const element = document.getElementById(id);
+
+        if (element && value !== undefined && value !== null) {
+            element.value = value;
+        }
+    }
+
+
+    /* =====================================================
+       USE LATEST SENSOR DATA
+    ===================================================== */
+
+    function useLatestSensors() {
+
+        setValue(
+            "nitrogen",
+            latestSensors.nitrogen ?? latestSensors.N ?? ""
+        );
+
+        setValue(
+            "phosphorus",
+            latestSensors.phosphorus ?? latestSensors.P ?? ""
+        );
+
+        setValue(
+            "potassium",
+            latestSensors.potassium ?? latestSensors.K ?? ""
+        );
+
+        setValue(
+            "temperature",
+            latestSensors.temperature ?? ""
+        );
+
+        setValue(
+            "humidity",
+            latestSensors.humidity ?? ""
+        );
+
+        setValue(
+            "ph",
+            latestSensors.ph ?? latestSensors.pH ?? ""
+        );
+
+        setValue(
+            "rainfall",
+            latestSensors.rainfall ?? ""
+        );
+    }
+
+
+    /* =====================================================
+       GET NUMBER
+    ===================================================== */
+
+    function getNumber(id) {
+
+        const value =
+            parseFloat(document.getElementById(id).value);
+
+        return value;
+    }
+
+
+    /* =====================================================
+       ANALYZE CROP
+    ===================================================== */
+
+    async function analyzeCrop() {
+
+        const errorBox =
+            document.getElementById("errorBox");
+
+        const resultSection =
+            document.getElementById("resultSection");
+
+        const loading =
+            document.getElementById("loading");
+
+        const button =
+            document.getElementById("analyzeButton");
+
+
+        errorBox.style.display = "none";
+
+
+        /* -----------------------------
+           READ INPUTS
+        ----------------------------- */
+
+        const nitrogen = getNumber("nitrogen");
+        const phosphorus = getNumber("phosphorus");
+        const potassium = getNumber("potassium");
+        const temperature = getNumber("temperature");
+        const humidity = getNumber("humidity");
+        const ph = getNumber("ph");
+        const rainfall = getNumber("rainfall");
+
+        const plannedCrop =
+            document.getElementById("planned_crop").value;
+
+
+        /* -----------------------------
+           VALIDATION
+        ----------------------------- */
+
+        const values = [
+            nitrogen,
+            phosphorus,
+            potassium,
+            temperature,
+            humidity,
+            ph,
+            rainfall
+        ];
+
+
+        if (values.some(value => Number.isNaN(value))) {
+
+            showError(
+                "Please enter all required soil and environmental values."
+            );
+
+            return;
+        }
+
+
+        /* -----------------------------
+           LOADING
+        ----------------------------- */
+
+        loading.style.display = "block";
+
+        resultSection.style.display = "none";
+
+        button.disabled = true;
+
+        button.innerText = "Analyzing...";
+
+
+        /* -----------------------------
+           API REQUEST
+        ----------------------------- */
+
+        try {
+
+            const response = await fetch(
+                "/predict-crop",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        nitrogen: nitrogen,
+
+                        phosphorus: phosphorus,
+
+                        potassium: potassium,
+
+                        temperature: temperature,
+
+                        humidity: humidity,
+
+                        ph: ph,
+
+                        rainfall: rainfall,
+
+                        planned_crop: plannedCrop
+
+                    })
+                }
+            );
+
+
+            let result;
+
+            try {
+
+                result = await response.json();
+
+            } catch (jsonError) {
+
+                throw new Error(
+                    "Server returned an invalid response. Please check Flask."
+                );
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.message ||
+                    result.error ||
+                    "Crop prediction failed."
+                );
+            }
+
+
+            if (result.status !== "success") {
+
+                throw new Error(
+                    result.message ||
+                    result.error ||
+                    "Crop prediction failed."
+                );
+            }
+
+
+            /* -----------------------------
+               DISPLAY RESULT
+            ----------------------------- */
+
+            displayResults(result.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            showError(
+                error.message ||
+                "Unable to connect to the crop prediction service."
+            );
+
+        }
+
+        finally {
+
+            loading.style.display = "none";
+
+            button.disabled = false;
+
+            button.innerText = "Analyze Crop →";
+        }
+    }
+
+
+    /* =====================================================
+       DISPLAY RESULTS
+    ===================================================== */
+
+    function displayResults(data) {
+
+        const resultSection =
+            document.getElementById("resultSection");
+
+
+        /* -----------------------------
+           RECOMMENDED CROP
+        ----------------------------- */
+
+        const crop =
+            data.recommended_crop || "Unknown";
+
+
+        document.getElementById(
+            "recommendedCrop"
+        ).textContent = crop;
+
+
+        /* -----------------------------
+           IMPORTANT:
+           USE model_confidence
+           NOT confidence
+        ----------------------------- */
+
+        const confidence =
+            Number(data.model_confidence ?? 0);
+
+
+        const safeConfidence =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    confidence
+                )
+            );
+
+
+        document.getElementById(
+            "confidenceText"
+        ).textContent =
+            safeConfidence.toFixed(2) + "%";
+
+
+        document.getElementById(
+            "confidenceBar"
+        ).style.width =
+            safeConfidence + "%";
+
+
+        /* -----------------------------
+           TOP 5 PREDICTIONS
+        ----------------------------- */
+
+        displayTopPredictions(
+            data.crop_options || []
+        );
+
+
+        /* -----------------------------
+           FIELD GUIDANCE
+        ----------------------------- */
+
+        displayFieldGuidance(
+            data.field_guidance || {},
+            data.input_summary || {}
+        );
+
+
+        /* -----------------------------
+           PLANNED CROP
+        ----------------------------- */
+
+        const planned =
+            data.planned_crop ||
+            data.field_guidance?.planned_crop ||
+            "";
+
+
+        const plannedCard =
+            document.getElementById(
+                "plannedCropCard"
+            );
+
+
+        if (planned) {
+
+            plannedCard.style.display = "block";
+
+            document.getElementById(
+                "plannedCropText"
+            ).textContent = planned;
+
+        } else {
+
+            plannedCard.style.display = "none";
+        }
+
+
+        /* -----------------------------
+           SHOW
+        ----------------------------- */
+
+        resultSection.style.display = "block";
+
+        resultSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+
+    /* =====================================================
+       TOP PREDICTIONS
+    ===================================================== */
+
+    function displayTopPredictions(predictions) {
+
+        const container =
+            document.getElementById(
+                "predictionList"
+            );
+
+
+        container.innerHTML = "";
+
+
+        if (!predictions.length) {
+
+            container.innerHTML =
+                '<div style="color:#70899d;font-size:12px;">No prediction data available.</div>';
+
+            return;
+        }
+
+
+        predictions
+            .slice(0, 5)
+            .forEach(
+                (prediction, index) => {
+
+                    const crop =
+                        prediction.crop ||
+                        "Unknown";
+
+
+                    const probability =
+                        Number(
+                            prediction.model_confidence ?? 0
+                        );
+
+
+                    const safeProbability =
+                        Math.max(
+                            0,
+                            Math.min(
+                                100,
+                                probability
+                            )
+                        );
+
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "prediction-item";
+
+
+                    item.innerHTML = `
+
+                        <div class="prediction-rank">
+                            #${index + 1}
+                        </div>
+
+                        <div class="prediction-info">
+
+                            <div class="prediction-name">
+                                ${escapeHtml(crop)}
+                            </div>
+
+                            <div class="prediction-track">
+
+                                <div
+                                    class="prediction-fill"
+                                    style="width:${safeProbability}%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="prediction-percent">
+                            ${safeProbability.toFixed(2)}%
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(item);
+
+                }
+            );
+    }
+
+
+    /* =====================================================
+       FIELD GUIDANCE
+    ===================================================== */
+
+    function displayFieldGuidance(
+        guidance,
+        inputs
+    ) {
+
+        const grid =
+            document.getElementById(
+                "conditionGrid"
+            );
+
+
+        grid.innerHTML = "";
+
+
+        const conditions = [
+
+            {
+                name: "Temperature",
+                value: inputs.temperature,
+                status: guidance.temperature?.status
+            },
+
+            {
+                name: "Humidity",
+                value: inputs.humidity,
+                status: guidance.humidity?.status
+            },
+
+            {
+                name: "Soil pH",
+                value: inputs.ph,
+                status: guidance.ph?.status
+            },
+
+            {
+                name: "Rainfall",
+                value: inputs.rainfall,
+                status: guidance.rainfall?.status
+            },
+
+            {
+                name: "Nitrogen",
+                value: inputs.N,
+                status: guidance.nitrogen?.status
+            },
+
+            {
+                name: "Phosphorus",
+                value: inputs.P,
+                status: guidance.phosphorus?.status
+            },
+
+            {
+                name: "Potassium",
+                value: inputs.K,
+                status: guidance.potassium?.status
+            }
+
+        ];
+
+
+        conditions.forEach(condition => {
+
+            const box =
+                document.createElement("div");
+
+
+            box.className =
+                "condition";
+
+
+            let value =
+                condition.value;
+
+
+            if (
+                value === undefined ||
+                value === null
+            ) {
+
+                value = "—";
+            }
+
+
+            box.innerHTML = `
+
+                <div class="condition-name">
+                    ${condition.name}
+                </div>
+
+                <div class="condition-value">
+                    ${escapeHtml(String(value))}
+                </div>
+
+                <div class="condition-status">
+                    ${escapeHtml(
+                        condition.status || "Not available"
+                    )}
+                </div>
+
+            `;
+
+
+            grid.appendChild(box);
+
+        });
+
+
+        /* -----------------------------
+           GUIDANCE TEXT
+        ----------------------------- */
+
+        document.getElementById(
+            "irrigationText"
+        ).textContent =
+            guidance.irrigation ||
+            "No irrigation guidance available.";
+
+
+        document.getElementById(
+            "diseaseRiskText"
+        ).textContent =
+            guidance.disease_risk ||
+            "No disease risk information available.";
+
+
+        document.getElementById(
+            "cropAdviceText"
+        ).textContent =
+            guidance.crop_advice ||
+            "No crop advice available.";
+    }
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function showError(message) {
+
+        const errorBox =
+            document.getElementById(
+                "errorBox"
+            );
+
+
+        errorBox.textContent =
+            "⚠ " + message;
+
+
+        errorBox.style.display =
+            "block";
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* =====================================================
+       HTML ESCAPE
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(/&/g, "&amp;")
+
+            .replace(/</g, "&lt;")
+
+            .replace(/>/g, "&gt;")
+
+            .replace(/"/g, "&quot;")
+
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /* =====================================================
+       LOAD SENSOR DATA AUTOMATICALLY
+    ===================================================== */
+
+    window.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            if (
+                latestSensors &&
+                Object.keys(latestSensors).length > 0
+            ) {
+
+                useLatestSensors();
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - User Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .auth-container {
+            max-width: 420px;
+            width: 100%;
+            margin: 4rem auto;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .auth-header h1 {
+            font-size: 1.5rem;
+            color: #34d399;
+            margin-top: 0.5rem;
+        }
+        .flash-msg {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+        .flash-msg.error { background-color: rgba(239, 68, 68, 0.2); border: 1px solid #f87171; color: #fca5a5; }
+        .flash-msg.success { background-color: rgba(16, 185, 129, 0.2); border: 1px solid #34d399; color: #a7f3d0; }
+        .flash-msg.info { background-color: rgba(59, 130, 246, 0.2); border: 1px solid #60a5fa; color: #93c5fd; }
+    </style>
+</head>
+<body style="justify-content: center; align-items: center;">
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <span style="font-size: 2.5rem;">🌱</span>
+            <h1>AGriSense Login</h1>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Smart Agriculture Intelligence Platform</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/login" method="POST">
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="farmer@agrisense.ai" required>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-bottom: 1.25rem;">SIGN IN</button>
+        </form>
+
+        <div style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+            Don't have an account? <a href="/signup" style="color: #34d399; text-decoration: none; font-weight: 600;">Sign Up Here</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - Analysis History Log</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">🌱</span>
+            <div>
+                <div class="logo-title">AGriSense</div>
+                <div class="logo-subtitle">Smart Agriculture Intelligence System</div>
+            </div>
+        </div>
+        <nav>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/history" class="nav-link active">History Log</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-title-section">
+            <div>
+                <h1>Historical Multimodal Analysis Log</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+                    Persistent record of all performed soil, crop, disease, and AI recommendations
+                </p>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th># ID</th>
+                            <th>Timestamp</th>
+                            <th>Recommended Crop</th>
+                            <th>Crop Confidence</th>
+                            <th>Disease Detected</th>
+                            <th>Health Status</th>
+                            <th>Risk Level</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if history and history|length > 0 %}
+                            {% for item in history %}
+                            <tr>
+                                <td>#{{ item.id }}</td>
+                                <td>{{ item.timestamp }}</td>
+                                <td style="font-weight: 600; color: #34d399;">{{ item.recommended_crop|capitalize }}</td>
+                                <td>{{ item.crop_confidence }}%</td>
+                                <td>{{ item.disease }}</td>
+                                <td>
+                                    {% if item.health_status|lower == 'healthy' %}
+                                        <span class="status-badge normal">Healthy</span>
+                                    {% else %}
+                                        <span class="status-badge critical">Diseased</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.risk_level|lower == 'high' or item.risk_level|lower == 'critical' %}
+                                        <span class="status-badge critical">{{ item.risk_level }}</span>
+                                    {% elif item.risk_level|lower == 'medium' %}
+                                        <span class="status-badge high">Medium</span>
+                                    {% else %}
+                                        <span class="status-badge normal">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="nav-link view-btn" data-id="{{ item.id }}" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--card-border);">
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                    No historical analysis records found yet. Perform an analysis on the Dashboard to view logs here.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Detailed Log View -->
+    <div id="detail-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 2rem;">
+        <div class="panel-card" style="max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative;">
+            <button id="modal-close" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">✕</button>
+            <h2 id="modal-title" style="margin-bottom: 1rem; color: #34d399;">Analysis Details</h2>
+            <div id="modal-body" style="font-size: 0.95rem; line-height: 1.6; color: #e2e8f0;"></div>
+        </div>
+    </div>
+
+    <script>
+        const historyData = {{ history|tojson if history else '[]' }};
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(e.target.getAttribute('data-id'));
+                const record = historyData.find(item => item.id === id);
+                if (record) {
+                    document.getElementById('modal-title').innerText = `Analysis Record #${record.id} - ${record.timestamp}`;
+                    const rec = record.recommendation || {};
+                    let html = `
+                        <p><strong>Recommended Crop:</strong> ${record.recommended_crop} (${record.crop_confidence}%)</p>
+                        <p><strong>Health Status:</strong> ${record.health_status} | <strong>Disease:</strong> ${record.disease}</p>
+                        <p><strong>Risk Level:</strong> ${record.risk_level}</p>
+                        <hr style="border-color: var(--card-border); margin: 1rem 0;">
+                        <h4 style="color: #38bdf8; margin-bottom: 0.5rem;">Overall Advisor Assessment</h4>
+                        <p>${rec.overall_assessment || 'N/A'}</p>
+                        <h4 style="color: #38bdf8; margin-top: 1rem; margin-bottom: 0.5rem;">Treatment Recommendation</h4>
+                        <p>${rec.treatment_recommendation || 'N/A'}</p>
+                        <h4 style="color: #38bdf8; margin-top: 1rem; margin-bottom: 0.5rem;">Fertilizer & Irrigation</h4>
+                        <p><strong>Fertilizer:</strong> ${rec.fertilizer_recommendation || 'N/A'}</p>
+                        <p><strong>Irrigation:</strong> ${rec.irrigation_recommendation || 'N/A'}</p>
+                    `;
+                    document.getElementById('modal-body').innerHTML = html;
+                    document.getElementById('detail-modal').style.display = 'flex';
+                }
+            });
+        });
+        document.getElementById('modal-close').addEventListener('click', () => {
+            document.getElementById('detail-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

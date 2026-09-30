@@ -1,0 +1,137 @@
+[
+  {
+    "chunk_id": 0,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "AGRISENSE AGRICULTURAL REFERENCE GUIDE 1: CROP CULTIVATION & NPK NUTRIENT REQUIREMENTS\n\n1. RICE (Oryza sativa)\n- Ideal Soil Moisture: 70-80% (flooded/semi-aquatic conditions during initial growth).\n- Temperature: 20-35\u00b0C (optimal 25-30\u00b0C).\n- Humidity: 80-90%.\n- Soil pH: 5.5 - 6.5 (slightly acidic clay loam).\n- Nutrient Profile (NPK): High Nitrogen (80-100 kg/ha), Moderate Phosphorus (40 kg/ha), Mo"
+  },
+  {
+    "chunk_id": 1,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "Profile (NPK): High Nitrogen (80-100 kg/ha), Moderate Phosphorus (40 kg/ha), Moderate Potassium (40 kg/ha). High rainfall requirement (150-300 cm).\n- Management: Maintain 2-5 cm water level during tillering stage. Apply Urea in split doses.\n\n2. MAIZE (Zea mays)\n- Ideal Soil Moisture: 50-65%.\n- Temperature: 18-27\u00b0C.\n- Humidity: 55-75%.\n- Soil pH: 5.8 - 7.0.\n- Nutrient Profile (NPK): High Nitrogen"
+  },
+  {
+    "chunk_id": 2,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "Humidity: 55-75%.\n- Soil pH: 5.8 - 7.0.\n- Nutrient Profile (NPK): High Nitrogen (70-90 kg/ha), High Phosphorus (40-50 kg/ha), Potassium (40 kg/ha). Rainfall (60-110 cm).\n- Management: Well-drained fertile loam soil. Avoid waterlogging during seedling stage. Top-dress with Nitrogen at knee-high stage.\n\n3. APPLE (Malus domestica)\n- Ideal Soil Moisture: 45-60%.\n- Temperature: 15-24\u00b0C (requires chilli"
+  },
+  {
+    "chunk_id": 3,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "omestica)\n- Ideal Soil Moisture: 45-60%.\n- Temperature: 15-24\u00b0C (requires chilling hours during winter).\n- Humidity: 60-70%.\n- Soil pH: 6.0 - 7.0 (loamy soil with good organic content).\n- Nutrient Profile (NPK): Balanced NPK (N: 20-30, P: 10-20, K: 20-30 ppm). Moderate rainfall (100-125 cm).\n- Management: Ensure drip irrigation during fruit expansion. Apply organic compost and zinc micronutrients"
+  },
+  {
+    "chunk_id": 4,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "rrigation during fruit expansion. Apply organic compost and zinc micronutrients annually.\n\n4. TOMATO (Solanum lycopersicum)\n- Ideal Soil Moisture: 50-60%.\n- Temperature: 21-29\u00b0C.\n- Humidity: 60-70%.\n- Soil pH: 6.0 - 6.8 (rich, well-drained sandy loam).\n- Nutrient Profile (NPK): N (40-60), P (35-50), K (40-60 ppm). High Calcium required to prevent Blossom End Rot.\n- Management: Regular drip irrigat"
+  },
+  {
+    "chunk_id": 5,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "Calcium required to prevent Blossom End Rot.\n- Management: Regular drip irrigation to avoid moisture fluctuation. Mulch soil to prevent soil-borne fungal spores from splashing onto lower leaves.\n\n5. POTATO (Solanum tuberosum)\n- Ideal Soil Moisture: 60-70%.\n- Temperature: 15-20\u00b0C.\n- Humidity: 65-80%.\n- Soil pH: 5.0 - 6.5.\n- Nutrient Profile (NPK): High Potassium (N: 50, P: 50, K: 100 ppm) for tube"
+  },
+  {
+    "chunk_id": 6,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": ".5.\n- Nutrient Profile (NPK): High Potassium (N: 50, P: 50, K: 100 ppm) for tuber development.\n- Management: Hilling of soil around plants. Avoid excess Nitrogen late in the season to prevent weak skin setting.\n\n6. COTTON (Gossypium hirsutum)\n- Ideal Soil Moisture: 40-55%.\n- Temperature: 21-30\u00b0C.\n- Humidity: 40-60%.\n- Soil pH: 6.0 - 8.0 (black cotton soil / deep loam).\n- Nutrient Profile (NPK): N"
+  },
+  {
+    "chunk_id": 7,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "Soil pH: 6.0 - 8.0 (black cotton soil / deep loam).\n- Nutrient Profile (NPK): N (100-120), P (40-50), K (40-50 kg/ha).\n- Management: Deep root system; requires alternate drying and wetting cycles. Avoid high humidity during boll opening stage.\n\n7. COFFEE (Coffea arabica / canephora)\n- Ideal Soil Moisture: 60-70%.\n- Temperature: 15-28\u00b0C.\n- Humidity: 70-85%.\n- Soil pH: 5.5 - 6.5 (deep, well-drained,"
+  },
+  {
+    "chunk_id": 8,
+    "source_doc": "crop_cultivation_guide.txt",
+    "text": "perature: 15-28\u00b0C.\n- Humidity: 70-85%.\n- Soil pH: 5.5 - 6.5 (deep, well-drained, acidic volcanic loam).\n- Nutrient Profile (NPK): High Potassium and Nitrogen (N: 100, P: 40, K: 100 kg/ha).\n- Management: Shade tree management required. Maintain leaf mulch to conserve organic matter."
+  },
+  {
+    "chunk_id": 9,
+    "source_doc": "disease_management_guide.txt",
+    "text": "AGRISENSE AGRICULTURAL REFERENCE GUIDE 2: PLANT DISEASE DIAGNOSIS & MANAGEMENT\n\n1. APPLE SCAB (Venturia inaequalis)\n- Symptoms: Olive-green to brown velvety spots on leaf surfaces and fruit scab lesions.\n- Causes: Fungal spores overwintering in fallen leaves under high humidity and cool temperatures.\n- Treatment & Prevention: Apply preventative copper or sulfur-based fungicides during green-tip st"
+  },
+  {
+    "chunk_id": 10,
+    "source_doc": "disease_management_guide.txt",
+    "text": "ention: Apply preventative copper or sulfur-based fungicides during green-tip stage. Prune trees to increase canopy airflow and sunlight penetration. Rake and destroy fallen leaves in autumn.\n\n2. EARLY BLIGHT (Alternaria solani - Tomato & Potato)\n- Symptoms: Dark brown spots with concentric rings (\"target-board\" pattern) starting on lower older leaves, leading to yellowing and defoliation.\n- Cause"
+  },
+  {
+    "chunk_id": 11,
+    "source_doc": "disease_management_guide.txt",
+    "text": "n) starting on lower older leaves, leading to yellowing and defoliation.\n- Causes: Fungal infection favored by warm temperature (24-29\u00b0C) and alternating wet and dry conditions.\n- Treatment & Prevention: Apply Chlorothalonil, Mancozeb, or copper hydroxide spray every 7-10 days. Ensure drip irrigation at soil level rather than overhead watering. Practice 3-year crop rotation with non-solanaceous cr"
+  },
+  {
+    "chunk_id": 12,
+    "source_doc": "disease_management_guide.txt",
+    "text": "er than overhead watering. Practice 3-year crop rotation with non-solanaceous crops.\n\n3. LATE BLIGHT (Phytophthora infestans - Tomato & Potato)\n- Symptoms: Water-soaked pale green or dark lesions on leaf tips, with white mold growth on underside during damp conditions. Tubers/fruits rot rapidly with foul odor.\n- Causes: Oomycete pathogen thriving in cold, wet, humid weather (15-20\u00b0C with >90% humi"
+  },
+  {
+    "chunk_id": 13,
+    "source_doc": "disease_management_guide.txt",
+    "text": ": Oomycete pathogen thriving in cold, wet, humid weather (15-20\u00b0C with >90% humidity). Highly destructive.\n- Treatment & Prevention: Apply systemic fungicides like Metalaxyl, Dimethomorph, or Cymoxanil immediately upon early detection. Remove and burn infected foliage immediately. Use certified disease-free seeds and resistant cultivars.\n\n4. TOMATO YELLOW LEAF CURL VIRUS (TYLCV)\n- Symptoms: Severe"
+  },
+  {
+    "chunk_id": 14,
+    "source_doc": "disease_management_guide.txt",
+    "text": "esistant cultivars.\n\n4. TOMATO YELLOW LEAF CURL VIRUS (TYLCV)\n- Symptoms: Severe stunting of plants, upward curling of leaf margins, interveinal chlorosis, and drastically reduced fruit yield.\n- Causes: Geminivirus transmitted exclusively by the Silverleaf Whitefly (Bemisia tabaci).\n- Treatment & Prevention: Control whitefly vectors using yellow sticky traps, insecticidal soaps, or neem oil sprays"
+  },
+  {
+    "chunk_id": 15,
+    "source_doc": "disease_management_guide.txt",
+    "text": "itefly vectors using yellow sticky traps, insecticidal soaps, or neem oil sprays. Cover young nursery beds with fine mesh nets (50 mesh). Remove infected plants to stop virus reservoir spread.\n\n5. CITRUS GREENING / HUANGLONGBING (Candidatus Liberibacter asiaticus - Orange / Citrus)\n- Symptoms: Asymmetrical blotchy mottling on leaves, yellow shoots, small lopsided bitter fruit with aborted seeds.\n-"
+  },
+  {
+    "chunk_id": 16,
+    "source_doc": "disease_management_guide.txt",
+    "text": "ling on leaves, yellow shoots, small lopsided bitter fruit with aborted seeds.\n- Causes: Bacterial pathogen transmitted by the Asian Citrus Psyllid (Diaphorina citri).\n- Treatment & Prevention: Systemic vector management using imidacloprid or thiamethoxam. Eradicate infected trees immediately. Apply balanced micronutrient foliar sprays (Zinc, Manganese, Boron) to sustain compromised trees.\n\n6. POW"
+  },
+  {
+    "chunk_id": 17,
+    "source_doc": "disease_management_guide.txt",
+    "text": "ent foliar sprays (Zinc, Manganese, Boron) to sustain compromised trees.\n\n6. POWDERY MILDEW (Erysiphe spp. - Cherry, Squash, Grapes, Apple)\n- Symptoms: White to grayish powdery fungal patches on upper leaf surfaces, young stems, and buds.\n- Causes: High relative humidity at night and dry warm daytime conditions.\n- Treatment & Prevention: Apply Potassium Bicarbonate, Sulfur, or Neem oil. Avoid dens"
+  },
+  {
+    "chunk_id": 18,
+    "source_doc": "disease_management_guide.txt",
+    "text": "tment & Prevention: Apply Potassium Bicarbonate, Sulfur, or Neem oil. Avoid dense planting to allow ventilation.\n\n7. BACTERIAL SPOT (Xanthomonas spp. - Pepper, Tomato, Peach)\n- Symptoms: Small dark water-soaked spots on leaves and fruit, turning scab-like or sunken with yellow halo.\n- Causes: Seed-borne or splash-dispersed bacterial pathogen during warm wet weather.\n- Treatment & Prevention: Apply"
+  },
+  {
+    "chunk_id": 19,
+    "source_doc": "disease_management_guide.txt",
+    "text": "rsed bacterial pathogen during warm wet weather.\n- Treatment & Prevention: Apply copper-maneb combinations. Avoid handling wet plants. Use hot water treated seeds."
+  },
+  {
+    "chunk_id": 20,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "AGRISENSE AGRICULTURAL REFERENCE GUIDE 3: SOIL MANAGEMENT, FERTILIZER & IRRIGATION BEST PRACTICES\n\n1. SOIL MOISTURE VS AIR HUMIDITY DEFINITION\n- Soil Moisture refers to the volumetric water content contained within the soil root zone (expressed as percentage % or cb tension).\n- Relative Air Humidity refers to the percentage of water vapor present in the ambient atmosphere.\n- Note: Soil moisture is"
+  },
+  {
+    "chunk_id": 21,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "ntage of water vapor present in the ambient atmosphere.\n- Note: Soil moisture is independent of air humidity; a field can have high air humidity (80%) during hot fog while soil moisture is critically dry (15%).\n\n2. SOIL pH CORRECTION & NUTRIENT AVAILABILITY\n- Optimal pH range for general crops: 6.0 to 7.0 (alkaline/acidic balance allows maximum availability of N, P, K, Ca, Mg, S).\n- Acidic Soil Ma"
+  },
+  {
+    "chunk_id": 22,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "dic balance allows maximum availability of N, P, K, Ca, Mg, S).\n- Acidic Soil Management (pH < 5.5): Add Agricultural Lime (Calcium Carbonate / Dolomitic Lime) at 2-5 tonnes/ha to neutralize soil acidity and increase P availability.\n- Alkaline Soil Management (pH > 7.8): Apply Agricultural Elemental Sulfur or Gypsum (Calcium Sulfate) and organic manure to lower pH and release locked Micronutrients"
+  },
+  {
+    "chunk_id": 23,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "alcium Sulfate) and organic manure to lower pH and release locked Micronutrients (Iron, Zinc, Manganese).\n\n3. FERTILIZER BALANCE (NPK MANAGEMENT)\n- Nitrogen (N): Drives vegetative leaf and canopy growth. Deficiency causes overall chlorosis (yellowing) of older leaves. Excess causes weak stems and delays fruining.\n- Phosphorus (P): Essential for root extension, flower initiation, and seed/fruit set"
+  },
+  {
+    "chunk_id": 24,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "sphorus (P): Essential for root extension, flower initiation, and seed/fruit setting. Deficiency causes dark green/purplish leaf tinting and stunted root growth.\n- Potassium (K): Regulates stomatal opening, water retention, carbohydrate synthesis, and disease resistance. Deficiency causes leaf tip necrosis (\"marginal scorching\").\n\n4. SMART IRRIGATION SCHEDULING\n- Drip Irrigation: Recommended for r"
+  },
+  {
+    "chunk_id": 25,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "corching\").\n\n4. SMART IRRIGATION SCHEDULING\n- Drip Irrigation: Recommended for row crops, orchards, and vegetables. Delivers water directly to root zone with 90-95% water efficiency.\n- Critical Soil Moisture Levels:\n  - < 25%: Critical Drought Stress (Immediate irrigation required).\n  - 30% - 45%: Low Moisture (Scheduled irrigation recommended).\n  - 50% - 70%: Normal / Optimal Moisture zone.\n  - >"
+  },
+  {
+    "chunk_id": 26,
+    "source_doc": "soil_and_irrigation_guide.txt",
+    "text": "ed irrigation recommended).\n  - 50% - 70%: Normal / Optimal Moisture zone.\n  - > 85%: Waterlogged condition (Risk of root asphyxiation and root rot fungus)."
+  }
+]

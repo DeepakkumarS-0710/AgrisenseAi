@@ -1,0 +1,73 @@
+FILE: services/llm_service.py
+
+Purpose:
+This file generates agricultural advice from sensor readings, crop recommendations, disease predictions, and retrieved knowledge.
+
+Main class:
+- LLMService
+
+It has two modes:
+1. LLM API mode (if API key is configured)
+2. Expert rule-based fallback mode (if no API key is available)
+
+Environment variables used:
+- LLM_API_KEY
+- LLM_MODEL
+- LLM_BASE_URL
+
+These are loaded with python-dotenv from a .env file.
+
+API mode behavior:
+- Builds a detailed prompt containing:
+  - sensor data
+  - recommended crop and confidence
+  - detected disease and confidence
+  - relevant RAG context
+- Sends the prompt to the configured LLM endpoint.
+- Expects valid JSON in response.
+- Returns a structured advisory payload with keys such as:
+  - overall_assessment
+  - disease_explanation
+  - possible_causes
+  - treatment_recommendation
+  - fertilizer_recommendation
+  - irrigation_recommendation
+  - soil_management
+  - prevention
+  - risk_level
+  - monitoring_advice
+
+Fallback logic:
+If the API call fails or no key is configured, the service uses deterministic rule-based guidance.
+
+This fallback checks:
+- disease status
+- soil moisture
+- pH level
+- humidity and rainfall
+- nitrogen, phosphorus, potassium imbalance
+- whether disease is present
+
+It outputs a risk level:
+- Low
+- Medium
+- High
+- Critical
+
+Expert reasoning examples:
+- If pH is too acidic or alkaline, it recommends liming or sulfur/gypsum adjustment.
+- If nitrogen is low, it recommends nitrogen application.
+- If soil moisture is low, it suggests irrigation.
+- If disease is detected, it gives pathogen-specific advice and prevention steps.
+
+Why this matters:
+The system is not only predictive; it also makes the output understandable and actionable for farmers.
+
+Key design principle:
+The LLM layer is a decision support layer that translates technical model results into practical farm action.
+
+Important note:
+This service functions as an agricultural advisor, not as a measurement model. It stays grounded in the data it receives and avoids inventing sensor readings or disease conditions.
+
+Key takeaway:
+This is the final intelligence layer that turns model outputs and retrieved knowledge into a farmer-friendly recommendation engine.

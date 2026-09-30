@@ -1,0 +1,79 @@
+FILE: services/crop_service.py
+
+Purpose:
+This file loads the trained crop recommendation model and exposes a prediction API for field-based crop suitability.
+
+Main class:
+- CropService
+
+Purpose of CropService:
+- Load serialized crop model and preprocessing metadata from disk.
+- Predict the best crop given environment features.
+- Return confidence and top crop alternatives.
+
+Model loading:
+- File: models/crop_model.pkl
+- It contains:
+  - model
+  - model_name
+  - label_encoder
+  - feature_names
+- The service also loads a scaler and feature names from crop_preprocessor.pkl.
+
+Prediction flow:
+1. A user or API sends values for:
+   - N
+   - P
+   - K
+   - temperature
+   - humidity
+   - ph
+   - rainfall
+2. The service creates a DataFrame with these values in the expected order.
+3. The model predicts class probabilities.
+4. It chooses the highest-probability crop as the recommended crop.
+5. It returns the top 5 crop alternatives and confidence values.
+6. It builds field guidance based on the selected crop and sensor conditions.
+
+Key function:
+- predict_crop(N, P, K, temperature, humidity, ph, rainfall)
+
+Return structure includes:
+- recommended_crop
+- confidence
+- crop_options
+- input_summary
+- field_guidance
+
+Field guidance details:
+- The file includes build_field_guidance(...)
+- This function generates human-readable agronomic advice such as:
+  - irrigation recommendation
+  - nutrient deficiency notes
+  - disease risk commentary
+  - maintenance suggestions
+  - rainfall-related recommendations
+
+Why this matters:
+This service does more than prediction. It converts numeric agronomic data into actionable farming advice.
+
+Example output interpretation:
+- recommended_crop: a suitable crop label
+- confidence: percentage probability for best choice
+- crop_options: ranked alternative crops
+- field_guidance: practical recommendations
+
+Global singleton pattern:
+- _crop_service_instance is created once and reused.
+- This reduces repeated model loading and improves efficiency.
+
+Important design note:
+The service is an inference layer for the crop ML model, separate from training code. This keeps the model logic clean and production-ready.
+
+Limitations:
+- It depends on the existence of the serialized model files.
+- It assumes the input feature names and units remain consistent with the training data.
+- It cannot replace local agronomic validation.
+
+Key takeaway:
+This is the deployed machine learning service that turns agronomic sensor inputs into a crop recommendation and field guidance plan.

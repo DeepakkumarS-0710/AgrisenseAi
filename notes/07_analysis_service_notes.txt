@@ -1,0 +1,76 @@
+FILE: services/analysis_service.py
+
+Purpose:
+This file orchestrates the full multimodal agricultural analysis pipeline by combining:
+- sensor readings
+- crop recommendation
+- disease detection
+- RAG retrieval
+- LLM advisory generation
+
+Main function:
+- run_multimodal_analysis(...)
+
+Inputs:
+- soil_moisture (optional)
+- temperature
+- humidity
+- ph
+- nitrogen
+- phosphorus
+- potassium
+- rainfall
+- image_path (optional)
+
+Workflow:
+1. Format sensor values and keep soil_moisture separate from ambient humidity.
+2. Call predict_crop(...) to generate crop recommendation.
+3. If an image exists, run predict_disease(image_path).
+4. Build a retrieval query combining crop recommendation and disease context.
+5. Call retrieve_knowledge(...) from rag.retriever.
+6. Call get_agricultural_advice(...) from llm_service.
+7. Return a combined dictionary containing all outputs.
+
+Sensor formatting:
+- Soil moisture is treated as a distinct metric from humidity.
+- If the value is missing or invalid, it is stored as "Not Available" instead of being substituted with air humidity.
+
+Crop phase:
+- Uses the crop service to estimate the best-suited crop for current field conditions.
+
+Disease phase:
+- If there is no uploaded image, the system returns a placeholder object:
+  - disease: No Image Uploaded
+  - health_status: Unknown
+  - confidence: 0
+
+RAG phase:
+- Query text combines:
+  - crop name
+  - cultivation needs
+  - disease term
+  - soil pH and other agronomic context
+- The query is passed to FAISS retrieval system to fetch relevant knowledge snippets.
+
+LLM phase:
+- The advisory engine builds recommendations from the full context.
+- It may use external LLM API if configured.
+- If no API key exists, it falls back to rules-based expert logic.
+
+Final output structure:
+{
+  "sensor_data": ...,
+  "crop_recommendation": ...,
+  "disease_detection": ...,
+  "rag_sources": ...,
+  "advisor": ...
+}
+
+Why this is a central component:
+This file is the glue between all ML, DL, retrieval, and advisory nodes. It turns raw user inputs into a complete agricultural decision-support result.
+
+Practical significance:
+This is the main analysis object that the frontend uses to display crop recommendations, disease diagnosis, and field advice.
+
+Key takeaway:
+The file represents the multimodal intelligence pipeline in AGriSense. Its role is to unify all models and knowledge sources into one real-world decision engine.

@@ -1,0 +1,24 @@
+AGRISENSE AGRICULTURAL REFERENCE GUIDE 3: SOIL MANAGEMENT, FERTILIZER & IRRIGATION BEST PRACTICES
+
+1. SOIL MOISTURE VS AIR HUMIDITY DEFINITION
+- Soil Moisture refers to the volumetric water content contained within the soil root zone (expressed as percentage % or cb tension).
+- Relative Air Humidity refers to the percentage of water vapor present in the ambient atmosphere.
+- Note: Soil moisture is independent of air humidity; a field can have high air humidity (80%) during hot fog while soil moisture is critically dry (15%).
+
+2. SOIL pH CORRECTION & NUTRIENT AVAILABILITY
+- Optimal pH range for general crops: 6.0 to 7.0 (alkaline/acidic balance allows maximum availability of N, P, K, Ca, Mg, S).
+- Acidic Soil Management (pH < 5.5): Add Agricultural Lime (Calcium Carbonate / Dolomitic Lime) at 2-5 tonnes/ha to neutralize soil acidity and increase P availability.
+- Alkaline Soil Management (pH > 7.8): Apply Agricultural Elemental Sulfur or Gypsum (Calcium Sulfate) and organic manure to lower pH and release locked Micronutrients (Iron, Zinc, Manganese).
+
+3. FERTILIZER BALANCE (NPK MANAGEMENT)
+- Nitrogen (N): Drives vegetative leaf and canopy growth. Deficiency causes overall chlorosis (yellowing) of older leaves. Excess causes weak stems and delays fruining.
+- Phosphorus (P): Essential for root extension, flower initiation, and seed/fruit setting. Deficiency causes dark green/purplish leaf tinting and stunted root growth.
+- Potassium (K): Regulates stomatal opening, water retention, carbohydrate synthesis, and disease resistance. Deficiency causes leaf tip necrosis ("marginal scorching").
+
+4. SMART IRRIGATION SCHEDULING
+- Drip Irrigation: Recommended for row crops, orchards, and vegetables. Delivers water directly to root zone with 90-95% water efficiency.
+- Critical Soil Moisture Levels:
+  - < 25%: Critical Drought Stress (Immediate irrigation required).
+  - 30% - 45%: Low Moisture (Scheduled irrigation recommended).
+  - 50% - 70%: Normal / Optimal Moisture zone.
+  - > 85%: Waterlogged condition (Risk of root asphyxiation and root rot fungus).

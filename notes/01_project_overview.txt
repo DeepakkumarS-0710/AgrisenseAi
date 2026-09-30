@@ -1,0 +1,48 @@
+AGRI SENSE PROJECT NOTES
+
+Project name: AGriSense
+Purpose: Smart agriculture platform that combines crop recommendation, plant disease detection, IoT sensor analysis, RAG retrieval, and LLM-powered advisory generation.
+
+Core idea:
+- Farmers or users provide field sensor values and optional leaf images.
+- The system predicts the most suitable crop and diagnoses diseases.
+- The platform uses a retrieval-augmented knowledge base and advisory engine to suggest practical farming guidance.
+- Results are saved to SQLite and shown in a Flask web dashboard.
+
+Main technologies:
+- Flask for web application and API endpoints
+- SQLite for user and analysis persistence
+- Scikit-learn for crop recommendation model
+- PyTorch and torchvision for deep learning disease classification
+- FAISS + sentence-transformers for RAG knowledge retrieval
+- Python and Pandas/Numpy for data processing
+- HTML/CSS/Vanilla JS for frontend interface
+
+Project workflow:
+1. User logs in or registers.
+2. Sensor values are submitted manually or by IoT device.
+3. Crop recommendation model predicts the best crop.
+4. Leaf image is classified with MobileNetV3 model.
+5. RAG retrieves relevant agriculture documents.
+6. LLM or fallback logic gives advisory recommendations.
+7. Everything is stored and displayed in dashboard/history.
+
+Important folders:
+- app.py: main Flask app and routes
+- services/: ML and analysis logic
+- training/: model training scripts
+- models/: saved trained artifacts
+- rag/: knowledge retrieval assets
+- database/: DB schema and helpers
+- templates/ and static/: web interface
+- reports/: output metrics and predictions
+
+Overall architecture summary:
+AGriSense is a multimodal agricultural intelligence system. It is the combination of:
+- IoT telemetry processing
+- Machine learning crop selection
+- Deep learning disease detection
+- Retrieval-based agriculture knowledge base
+- AI advisory recommendations
+
+This makes it more than a simple model app; it is a complete decision-support platform for field management.

@@ -1,0 +1,78 @@
+ML AND DL SUMMARY NOTES
+
+This project contains both machine learning and deep learning components, each used for specific types of decision-making.
+
+1. MACHINE LEARNING COMPONENT
+File: training/train_crop_model.py
+Role: tabular crop recommendation
+Problem type: multiclass classification
+Model(s): Random Forest and XGBoost
+Inputs:
+- Nitrogen (N)
+- Phosphorus (P)
+- Potassium (K)
+- Temperature
+- Humidity
+- pH
+- Rainfall
+Output:
+- Recommended crop label with confidence score
+
+Why it is ML:
+The data is structured tabular data, not images. Traditional classification algorithms perform well on agronomic numerical inputs.
+
+Inference service:
+- services/crop_service.py
+This service loads the trained crop model, predicts crop suitability, and returns field guidance.
+
+2. DEEP LEARNING COMPONENT
+File: training/train_disease_model.py
+Role: plant leaf disease recognition
+Problem type: image multiclass classification
+Model: MobileNetV3 Small with transfer learning
+Inputs:
+- Leaf images in the PlantVillage dataset
+Outputs:
+- Disease class / healthy status with confidence score
+
+Why it is DL:
+This task depends on visual patterns in leaf images. CNNs are designed for image patterns and texture recognition.
+
+Inference service:
+- services/disease_service.py
+This service loads model weights, validates image quality, runs forward passes, and returns the top disease predictions.
+
+3. MULTIMODAL ANALYSIS PIPELINE
+File: services/analysis_service.py
+Role: combine all modules into one system
+It takes sensor inputs and optional leaf images and combines:
+- crop prediction
+- disease prediction
+- RAG retrieval
+- LLM advisory output
+
+This is where the app becomes a holistic agricultural intelligence platform instead of separate standalone models.
+
+4. RAG AND KNOWLEDGE RETRIEVAL
+The project includes a retrieval system built on FAISS and vectorized agriculture guides.
+It helps the system ground its advice in agriculture knowledge documents.
+
+5. LLM ADVISORY LAYER
+File: services/llm_service.py
+This layer converts technical predictions into practical advice for the user. It may use a real LLM if configured or a deterministic fallback engine if not.
+
+6. SYSTEM DESIGN HIGHLIGHTS
+- Crop recommendation is a classical ML task on structured features.
+- Disease detection is a deep learning task on image data.
+- Advisory generation is a reasoning layer using LLM or expert fallback rules.
+- RAG connects predictions with agriculture domain knowledge.
+
+7. BUSINESS VALUE
+Together, these modules help in:
+- choosing the best crop for the field
+- detecting plant diseases early
+- improving irrigation and nutrient decisions
+- generating actionable recommendations for farmers
+
+8. Final takeaway
+The project is a true AI agriculture suite: machine learning for crop suitability, deep learning for disease identification, retrieval for domain knowledge, and LLM/advisory logic for decision support.

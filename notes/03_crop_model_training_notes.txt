@@ -1,0 +1,79 @@
+FILE: training/train_crop_model.py
+
+Purpose:
+This script trains the agricultural crop recommendation model used to suggest the best crop based on soil and climate features.
+
+Machine learning problem:
+- This is a multiclass classification task.
+- The model must predict which crop is suitable given a set of numeric field features.
+- Input features include N, P, K, temperature, humidity, pH, and rainfall.
+- Target is the crop label, such as rice, maize, cotton, or wheat.
+
+Dataset used:
+- File: final data/data/crop_recommendation/Crop_recommendation.csv
+- Format: tabular CSV with numeric agronomic parameters and a label column.
+
+Important workflow:
+1. Load dataset with pandas.
+2. Detect target column (label if present; otherwise last column).
+3. Select feature columns:
+   - N
+   - P
+   - K
+   - temperature
+   - humidity
+   - ph
+   - rainfall
+4. Apply LabelEncoder to convert text crop names into numeric indices.
+5. Split data: 80% training, 20% testing, stratified by label.
+6. Train two models:
+   - RandomForestClassifier
+   - XGBClassifier
+7. Compare weighted F1-score and accuracy.
+8. Select the better-performing model.
+9. Save the final model and preprocessing metadata.
+
+Model details:
+- Random Forest:
+  - n_estimators=100
+  - random_state=42
+  - Works well with tabular agricultural data and is robust to feature interactions.
+
+- XGBoost:
+  - n_estimators=100
+  - random_state=42
+  - eval_metric='mlogloss'
+  - Often gives strong performance on structured tabular datasets.
+
+Model selection logic:
+- The code compares weighted F1 of XGBoost and Random Forest.
+- Whichever model produces higher F1 is selected as best_model.
+- The selected model is saved to models/crop_model.pkl.
+
+Saved artifacts:
+- models/crop_model.pkl
+  - Contains model object, model name, label encoder, and feature names.
+- models/crop_preprocessor.pkl
+  - Contains scaler and feature names.
+
+Preprocessing details:
+- StandardScaler is used for numerical scaling.
+- Although the Random Forest model can work with raw features, scaling is still prepared for consistency and future compatibility.
+
+Evaluation metrics used:
+- Accuracy
+- Weighted precision
+- Weighted recall
+- Weighted F1-score
+- Classification report
+
+Why this is useful:
+This model is used to provide a recommended crop based on a field's chemical and climatic profile. It is the system's agronomic decision support backbone for crop suitability.
+
+Limitations:
+- It is trained on a static dataset and may not fully reflect every local soil condition.
+- Performance depends on data quality and feature reliability.
+- It cannot infer disease or long-term sustainability without additional context.
+
+Key takeaway:
+This is the main machine learning component for crop recommendation, built with classical supervised learning and a model-selection workflow.

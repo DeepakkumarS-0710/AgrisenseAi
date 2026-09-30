@@ -1,0 +1,101 @@
+FILE: training/train_disease_model.py
+
+Purpose:
+This script trains the deep learning model used to detect plant diseases from leaf images.
+
+Machine learning problem:
+- This is a multiclass image classification task.
+- The model learns to classify plant leaf images into disease categories or healthy status.
+- The dataset is from PlantVillage and contains many crop disease types across multiple plants.
+
+Dataset used:
+- Directory: final data/data/plantvillage/PlantVillage
+- Contains folders representing classes such as:
+  - Apple___Apple_scab
+  - Apple___healthy
+  - Tomato___Late_blight
+  - Potato___healthy
+  - etc.
+- The system is trained to classify across many disease classes from crop-specific image folders.
+
+Key dataset preparation steps:
+1. Walk through all image folders recursively.
+2. Collect image paths for each class.
+3. Map class names to numeric indices.
+4. Shuffle image files deterministically with a fixed random seed.
+5. Limit samples per class for faster training when desired.
+6. Split each class into:
+   - 70% training
+   - 15% validation
+   - 15% testing
+
+Important class mapping:
+- Each class folder becomes a label.
+- The script saves:
+  - class_mapping.json
+  - class_names.json
+- These are used later in inference to map model output indices back to human-readable disease names.
+
+Data augmentation and transforms:
+- Resize images to 224x224
+- Random horizontal flip
+- Random rotation
+- Convert to tensor
+- Normalize using ImageNet mean and std values
+
+Why this is important:
+These transforms help the model generalize better and reduce overfitting while matching transfer learning conventions.
+
+Model architecture:
+- MobileNetV3 Small from torchvision.models
+- Pretrained weights are used via weights=models.MobileNet_V3_Small_Weights.DEFAULT
+- The backbone feature extractor is frozen to speed up training and reduce compute cost.
+- Final classifier head is replaced with a linear layer matching the number of disease classes.
+
+Training approach:
+- Transfer learning is used.
+- The base convolution network is reused from pretrained ImageNet weights.
+- Only the classifier layer is trained for this domain-specific task.
+
+Training setup:
+- Device: GPU if available, otherwise CPU.
+- Criterion: CrossEntropyLoss
+- Optimizer: Adam
+- Learning rate: 0.003
+- Batch size: 64
+
+Training loop:
+- For each epoch:
+  - Train model on train loader
+  - Compute training loss and accuracy
+  - Evaluate on validation loader
+  - Record train/val loss and accuracy history
+
+Evaluation:
+- After training, the script evaluates on test set.
+- Accuracy is printed.
+- classification_report and confusion_matrix are used for deeper analysis.
+
+Saved outputs:
+- models/disease_model/disease_model.pth
+- models/disease_model/best_model.pth
+- models/disease_model/class_mapping.json
+- models/disease_model/class_names.json
+- models/disease_model/training_metrics.png
+
+Key performance metrics stored:
+- Accuracy
+- Loss curves
+- Validation trends
+- Final test-set evaluation
+
+Why deep learning is used here:
+Image classification of diseased leaves is a visual recognition challenge. CNN architecture is better suited than tabular ML because pixel patterns and leaf texture matter strongly.
+
+Limitations:
+- Training is limited by number of samples and resources.
+- The model does not handle all crop diseases equally well.
+- Real-world field images may differ from dataset images.
+
+Key takeaway:
+This is the deep learning component of the system, built for plant leaf disease detection using transfer learning and MobileNetV3.

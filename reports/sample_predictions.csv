@@ -1,0 +1,51 @@
+sample_num,image,actual_class,predicted_class,confidence_percent,correct,correct_image_path
+1,e42a64c8-fb93-47b0-bd2a-33ce669d13e2___R.S_HL 8149 copy.jpg,Corn_(maize)___healthy,Corn_(maize)___healthy,99.97,True,reports\correct_predictions\Corn_(maize)___healthy\e42a64c8-fb93-47b0-bd2a-33ce669d13e2___R.S_HL 8149 copy.jpg
+2,a8ce00fc-2e45-4777-87af-34aaa276cd22___RS_HL 4379.JPG,Soybean___healthy,Soybean___healthy,95.02,True,reports\correct_predictions\Soybean___healthy\a8ce00fc-2e45-4777-87af-34aaa276cd22___RS_HL 4379.JPG
+3,e51ee2ab-a7f5-4558-83e3-7bf6d0364c63___Mt.N.V_HL 6064.JPG,Grape___healthy,Grape___healthy,99.62,True,reports\correct_predictions\Grape___healthy\e51ee2ab-a7f5-4558-83e3-7bf6d0364c63___Mt.N.V_HL 6064.JPG
+4,63109480-7b83-4d2f-89e2-96a3307137b2___JR_HL 5976.JPG,"Pepper,_bell___healthy","Pepper,_bell___healthy",98.59,True,"reports\correct_predictions\Pepper,_bell___healthy\63109480-7b83-4d2f-89e2-96a3307137b2___JR_HL 5976.JPG"
+5,8a9fa8ed-4e9f-4e6e-9505-4d07a8e1d611___RS_HL 3353.JPG,Soybean___healthy,Potato___healthy,62.37,False,
+6,13d5c528-5e33-471b-bb76-33ec14a41e09___RS_HL 3185.JPG,Soybean___healthy,"Pepper,_bell___healthy",93.82,False,
+7,e1bba6b4-45e5-4d1f-b58f-01ef97525cc6___RS_HL 2324.JPG,Blueberry___healthy,Cherry_(including_sour)___healthy,59.28,False,
+8,9ae93bcc-5cfb-4407-a711-de800fb2853a___GH_HL Leaf 519.4.JPG,Tomato___healthy,Cherry_(including_sour)___healthy,82.86,False,
+9,ebba11b3-2d4b-4580-9c2f-9e59c1047cdc___RS_HL 7305.JPG,Apple___healthy,Cherry_(including_sour)___healthy,73.55,False,
+10,d548e3e0-526b-4a22-b517-220ab4df8d00___RS_HL 2476.JPG,Blueberry___healthy,"Pepper,_bell___healthy",94.43,False,
+11,3256eb2c-061d-48b8-b7df-5939eff8a590___RS_HL 3926.JPG,Soybean___healthy,Soybean___healthy,96.95,True,reports\correct_predictions\Soybean___healthy\3256eb2c-061d-48b8-b7df-5939eff8a590___RS_HL 3926.JPG
+12,388c4797-2d36-42fc-967b-8565764d94ef___RS_HL 4960.JPG,Blueberry___healthy,Blueberry___healthy,96.94,True,reports\correct_predictions\Blueberry___healthy\388c4797-2d36-42fc-967b-8565764d94ef___RS_HL 4960.JPG
+13,94ba47f7-70b9-41ec-92ac-9fdb9e71193f___RS_HL 0739.JPG,Blueberry___healthy,Blueberry___healthy,96.2,True,reports\correct_predictions\Blueberry___healthy\94ba47f7-70b9-41ec-92ac-9fdb9e71193f___RS_HL 0739.JPG
+14,d8da7e4d-9520-4a25-8f29-4ff677e7c214___RS_HL 7763.JPG,Apple___healthy,Apple___healthy,80.0,True,reports\correct_predictions\Apple___healthy\d8da7e4d-9520-4a25-8f29-4ff677e7c214___RS_HL 7763.JPG
+15,54bb7e75-5b69-4777-ad28-6a676e5fd46d___RS_HL 9631.JPG,Tomato___healthy,Tomato___healthy,99.45,True,reports\correct_predictions\Tomato___healthy\54bb7e75-5b69-4777-ad28-6a676e5fd46d___RS_HL 9631.JPG
+16,669bc3c2-37a3-4dd7-9219-9db679acb52e___RS_HL 2535.JPG,Blueberry___healthy,Blueberry___healthy,93.03,True,reports\correct_predictions\Blueberry___healthy\669bc3c2-37a3-4dd7-9219-9db679acb52e___RS_HL 2535.JPG
+17,cb5b539c-e94a-4c71-9a95-209a576d6391___RS_HL 5808.JPG,Soybean___healthy,Cherry_(including_sour)___healthy,34.54,False,
+18,edfbcb80-5821-4c6e-a464-79f119de35ae___RS_HL 9903.JPG,Tomato___healthy,Tomato___healthy,62.91,True,reports\correct_predictions\Tomato___healthy\edfbcb80-5821-4c6e-a464-79f119de35ae___RS_HL 9903.JPG
+19,dbc5a279-be4b-4cec-afdc-5256373a3b07___RS_HL 5598 1.JPG,Soybean___healthy,Soybean___healthy,99.24,True,reports\correct_predictions\Soybean___healthy\dbc5a279-be4b-4cec-afdc-5256373a3b07___RS_HL 5598 1.JPG
+20,791a7d36-49d2-4b61-8fc9-bfab404a9124___JR_HL 9456.JPG,Cherry_(including_sour)___healthy,Cherry_(including_sour)___healthy,99.79,True,reports\correct_predictions\Cherry_(including_sour)___healthy\791a7d36-49d2-4b61-8fc9-bfab404a9124___JR_HL 9456.JPG
+21,7948ada9-eabc-4cb7-a579-b73e938eb716___RS_HL 4185.JPG,Potato___healthy,Potato___healthy,99.94,True,reports\correct_predictions\Potato___healthy\7948ada9-eabc-4cb7-a579-b73e938eb716___RS_HL 4185.JPG
+22,ec7ed2b4-40e4-4b95-8728-70472c7fc459___JR_HL 8723.JPG,"Pepper,_bell___healthy","Pepper,_bell___healthy",95.33,True,"reports\correct_predictions\Pepper,_bell___healthy\ec7ed2b4-40e4-4b95-8728-70472c7fc459___JR_HL 8723.JPG"
+23,28abbe4c-5291-47a1-b8ea-c8b21c18d9dd___RS_HL 2884.JPG,Soybean___healthy,Cherry_(including_sour)___healthy,41.35,False,
+24,28805ada-e286-4327-9626-06ae92eb950a___RS_HL 4291.JPG,Soybean___healthy,Soybean___healthy,70.23,True,reports\correct_predictions\Soybean___healthy\28805ada-e286-4327-9626-06ae92eb950a___RS_HL 4291.JPG
+25,991f9446-4cb6-41a8-b6ef-c2ee9e500c7b___JR_HL 9735.JPG,Cherry_(including_sour)___healthy,Cherry_(including_sour)___healthy,99.99,True,reports\correct_predictions\Cherry_(including_sour)___healthy\991f9446-4cb6-41a8-b6ef-c2ee9e500c7b___JR_HL 9735.JPG
+26,93c02ade-4b3a-4401-836d-0577276c645c___Crnl_L.Mold 8736.JPG,Tomato___Leaf_Mold,Tomato___Septoria_leaf_spot,91.86,False,
+27,a7b26211-f6c0-404c-be55-5360b2c7c121___RS_L.Scorch 1128.JPG,Strawberry___Leaf_scorch,Strawberry___Leaf_scorch,99.97,True,reports\correct_predictions\Strawberry___Leaf_scorch\a7b26211-f6c0-404c-be55-5360b2c7c121___RS_L.Scorch 1128.JPG
+28,d016bc3b-b8e8-4012-8403-3b5cd92a91bf___FREC_Pwd.M 5023.JPG,Cherry_(including_sour)___Powdery_mildew,Potato___healthy,76.1,False,
+29,dfbdce65-39f2-4eda-8989-47da4f469206___Rut._Bact.S 1098.JPG,Peach___Bacterial_spot,Peach___Bacterial_spot,79.22,True,reports\correct_predictions\Peach___Bacterial_spot\dfbdce65-39f2-4eda-8989-47da4f469206___Rut._Bact.S 1098.JPG
+30,e5579fb1-6485-49da-9839-4ece906a6865___Matt.S_CG 0682.JPG,Tomato___Septoria_leaf_spot,Tomato___Septoria_leaf_spot,86.52,True,reports\correct_predictions\Tomato___Septoria_leaf_spot\e5579fb1-6485-49da-9839-4ece906a6865___Matt.S_CG 0682.JPG
+31,4136897a-cf67-4e88-b588-60585499820a___Com.G_SpM_FL 1510.JPG,Tomato___Spider_mites Two-spotted_spider_mite,Tomato___healthy,62.54,False,
+32,aa246de3-c183-4133-b4a9-2eba3fe3ae56___RS_LB 2951.JPG,Potato___Late_blight,Potato___healthy,99.76,False,
+33,dc75b693-0cd6-4a48-b0a0-e442070df2cc___FREC_C.Rust 9951.JPG,Apple___Cedar_apple_rust,Apple___Cedar_apple_rust,77.15,True,reports\correct_predictions\Apple___Cedar_apple_rust\dc75b693-0cd6-4a48-b0a0-e442070df2cc___FREC_C.Rust 9951.JPG
+34,ca7035fa-f55d-49c7-9d89-3d513c8e35b1___RS_Erly.B 7556.JPG,Tomato___Early_blight,Tomato___Target_Spot,23.91,False,
+35,1634e251-6b10-4531-9df2-9f231cb7e047___RS_L.Scorch 0918.JPG,Strawberry___Leaf_scorch,Strawberry___Leaf_scorch,88.0,True,reports\correct_predictions\Strawberry___Leaf_scorch\1634e251-6b10-4531-9df2-9f231cb7e047___RS_L.Scorch 0918.JPG
+36,RS_Rust 2187.JPG,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,99.22,True,reports\correct_predictions\Corn_(maize)___Common_rust_\RS_Rust 2187.JPG
+37,12d57d51-a87d-4b2d-9572-8518cedb6dc1___UF.Citrus_HLB_Lab 0003.JPG,Orange___Haunglongbing_(Citrus_greening),Orange___Haunglongbing_(Citrus_greening),99.79,True,reports\correct_predictions\Orange___Haunglongbing_(Citrus_greening)\12d57d51-a87d-4b2d-9572-8518cedb6dc1___UF.Citrus_HLB_Lab 0003.JPG
+38,24342d0b-36bf-45df-8a26-d4d748f52890___UF.GRC_YLCV_Lab 01940.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,Tomato___Tomato_Yellow_Leaf_Curl_Virus,99.95,True,reports\correct_predictions\Tomato___Tomato_Yellow_Leaf_Curl_Virus\24342d0b-36bf-45df-8a26-d4d748f52890___UF.GRC_YLCV_Lab 01940.JPG
+39,86e78083-2854-495e-85af-1c1c61c6ddae___Crnl_L.Mold 8954.JPG,Tomato___Leaf_Mold,Tomato___Septoria_leaf_spot,87.96,False,
+40,ebb93175-98bf-4a4f-ad3a-d79bf0ec820b___UF.GRC_YLCV_Lab 01390.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,Tomato___Septoria_leaf_spot,69.19,False,
+41,fe60a756-1145-4ed4-9496-af5f387f0222___Crnl_L.Mold 8965.JPG,Tomato___Leaf_Mold,Tomato___Septoria_leaf_spot,98.94,False,
+42,e4d9dc76-f555-4ad9-a7e5-33a21ae5e6cf___RS_L.Scorch 9924.JPG,Strawberry___Leaf_scorch,Strawberry___Leaf_scorch,58.89,True,reports\correct_predictions\Strawberry___Leaf_scorch\e4d9dc76-f555-4ad9-a7e5-33a21ae5e6cf___RS_L.Scorch 9924.JPG
+43,4ffd2596-dce0-42de-90f0-3a383d238975___UF.GRC_YLCV_Lab 02708.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,Tomato___Tomato_Yellow_Leaf_Curl_Virus,97.25,True,reports\correct_predictions\Tomato___Tomato_Yellow_Leaf_Curl_Virus\4ffd2596-dce0-42de-90f0-3a383d238975___UF.GRC_YLCV_Lab 02708.JPG
+44,cad14233-257e-4942-876b-25e4911fc1cf___YLCV_NREC 2036.JPG,Tomato___Tomato_Yellow_Leaf_Curl_Virus,Tomato___Tomato_mosaic_virus,71.65,False,
+45,7d767bb2-c00f-4c44-976e-e08a1b2f9909___Matt.S_CG 7618.JPG,Tomato___Septoria_leaf_spot,Tomato___Septoria_leaf_spot,98.88,True,reports\correct_predictions\Tomato___Septoria_leaf_spot\7d767bb2-c00f-4c44-976e-e08a1b2f9909___Matt.S_CG 7618.JPG
+46,d93875b4-77f3-43fc-ad35-0d28143b68e0___Rut._Bact.S 1421.JPG,Peach___Bacterial_spot,Peach___Bacterial_spot,99.23,True,reports\correct_predictions\Peach___Bacterial_spot\d93875b4-77f3-43fc-ad35-0d28143b68e0___Rut._Bact.S 1421.JPG
+47,27298edb-026a-4aec-bfb7-429f1ec9919c___CREC_HLB 4925.JPG,Orange___Haunglongbing_(Citrus_greening),Orange___Haunglongbing_(Citrus_greening),99.38,True,reports\correct_predictions\Orange___Haunglongbing_(Citrus_greening)\27298edb-026a-4aec-bfb7-429f1ec9919c___CREC_HLB 4925.JPG
+48,8db2385b-edb8-46c1-92ab-c46bf76db8be___Com.G_SpM_FL 8602.JPG,Tomato___Spider_mites Two-spotted_spider_mite,Tomato___Spider_mites Two-spotted_spider_mite,86.2,True,reports\correct_predictions\Tomato___Spider_mites Two-spotted_spider_mite\8db2385b-edb8-46c1-92ab-c46bf76db8be___Com.G_SpM_FL 8602.JPG
+49,RS_Rust 2440.JPG,Corn_(maize)___Common_rust_,Corn_(maize)___Common_rust_,95.35,True,reports\correct_predictions\Corn_(maize)___Common_rust_\RS_Rust 2440.JPG
+50,27292fc6-b4d8-4c2c-b0a8-36d4abf2a1a9___FAM_B.Rot 0643.JPG,Grape___Black_rot,Grape___Esca_(Black_Measles),78.85,False,

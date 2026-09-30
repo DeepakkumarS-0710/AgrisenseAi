@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - AI Agriculture Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">🌱</span>
+            <div>
+                <div class="logo-title">AGriSense</div>
+                <div class="logo-subtitle">Smart Agriculture Intelligence</div>
+            </div>
+        </div>
+        <nav>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/crop-analysis" class="nav-link">Crop Analysis</a>
+            <a href="/disease-detection" class="nav-link">Disease Detection</a>
+            <a href="/advisor" class="nav-link active">AI Advisor</a>
+            <a href="/history" class="nav-link">History</a>
+            <a href="/about" class="nav-link">About</a>
+            <a href="/logout" class="nav-link" style="color: #f87171;">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-title-section">
+            <div>
+                <h1>Multimodal AI Agriculture Advisor</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+                    Grounded AI advisory combining field sensor telemetry, ML crop recommendation, PyTorch disease detection, and vector RAG grounding
+                </p>
+            </div>
+        </div>
+
+        <div class="dashboard-workspace" style="grid-template-columns: 1fr 1.5fr;">
+            
+            <!-- SENSOR & CROP INPUT FORM -->
+            <div class="panel-card">
+                <div class="panel-title" style="color: #a7f3d0;">
+                    <span>🤖</span> Multimodal Field Inputs
+                </div>
+
+                <form id="advisor-form" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="soil_moisture">Soil Moisture (%)</label>
+                            <input type="number" step="0.1" id="soil_moisture" name="soil_moisture" placeholder="Optional">
+                        </div>
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°C)</label>
+                            <input type="number" step="0.1" id="temperature" name="temperature" value="{{ latest_sensors.temperature if latest_sensors else 25.5 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="humidity">Humidity (%)</label>
+                            <input type="number" step="0.1" id="humidity" name="humidity" value="{{ latest_sensors.humidity if latest_sensors else 72.0 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ph">Soil pH</label>
+                            <input type="number" step="0.1" id="ph" name="ph" value="{{ latest_sensors.ph if latest_sensors else 6.5 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nitrogen">Nitrogen (N)</label>
+                            <input type="number" step="1" id="nitrogen" name="nitrogen" value="{{ latest_sensors.nitrogen if latest_sensors else 50 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phosphorus">Phosphorus (P)</label>
+                            <input type="number" step="1" id="phosphorus" name="phosphorus" value="{{ latest_sensors.phosphorus if latest_sensors else 50 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="potassium">Potassium (K)</label>
+                            <input type="number" step="1" id="potassium" name="potassium" value="{{ latest_sensors.potassium if latest_sensors else 50 }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rainfall">Rainfall (mm)</label>
+                            <input type="number" step="0.1" id="rainfall" name="rainfall" value="{{ latest_sensors.rainfall if latest_sensors else 100.0 }}" required>
+                        </div>
+                    </div>
+
+                    <div class="image-upload-box" id="drop-zone-adv" style="margin-top: 1rem;">
+                        <input type="file" id="adv-image-input" name="image" accept="image/*" style="display: none;">
+                        <div id="upload-placeholder-adv">
+                            <div class="upload-icon">📷</div>
+                            <div style="font-weight: 600; font-size: 0.85rem;">Attach Crop Leaf Photo (Optional)</div>
+                        </div>
+                        <img id="image-preview-adv" class="preview-img" alt="Leaf Preview">
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="adv-btn">
+                        <span class="spinner" id="adv-spinner"></span>
+                        <span id="adv-btn-text">GENERATE FULL AI RECOMMENDATIONS</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ADVISOR RESULTS -->
+            <div class="results-container">
+                <div class="panel-card advisor-section">
+                    <div class="panel-title" style="justify-content: space-between;">
+                        <div style="color: #a7f3d0;"><span>🤖</span> AI Advisory Report</div>
+                        <span class="status-badge normal" id="adv-risk">Risk Level: Low</span>
+                    </div>
+
+                    <div style="font-size: 0.95rem; line-height: 1.6; color: #e2e8f0; margin-bottom: 1.25rem;" id="adv-assessment">
+                        Submit field telemetry and crop inputs above to generate comprehensive AI recommendations.
+                    </div>
+
+                    <div class="advisor-grid">
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Disease Explanation & Causes</div>
+                            <div class="advisor-item-content" id="adv-disease-exp">--</div>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Treatment Protocol</div>
+                            <div class="advisor-item-content" id="adv-treatment">--</div>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Fertilizer Advice</div>
+                            <div class="advisor-item-content" id="adv-fertilizer">--</div>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Irrigation Management</div>
+                            <div class="advisor-item-content" id="adv-irrigation">--</div>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Soil pH Management</div>
+                            <div class="advisor-item-content" id="adv-soil">--</div>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-item-title">Prevention & Monitoring Plan</div>
+                            <div class="advisor-item-content" id="adv-prevention">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RAG SOURCES -->
+                <div class="panel-card">
+                    <div class="panel-title" style="color: #60a5fa;">
+                        <span>📚</span> Grounded Sources Used
+                    </div>
+                    <div id="adv-rag-sources">
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Retrieved reference documents from agricultural vector database will appear here.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone-adv');
+        const imgInput = document.getElementById('adv-image-input');
+        const imgPreview = document.getElementById('image-preview-adv');
+        const placeholder = document.getElementById('upload-placeholder-adv');
+
+        dropZone.addEventListener('click', () => imgInput.click());
+        imgInput.addEventListener('change', () => {
+            if (imgInput.files && imgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            }
+        });
+
+        document.getElementById('advisor-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('adv-btn');
+            const spinner = document.getElementById('adv-spinner');
+            const btnText = document.getElementById('adv-btn-text');
+
+            btn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.innerText = 'GENERATING ADVISORY...';
+
+            const formData = new FormData(document.getElementById('advisor-form'));
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                const res = await response.json();
+
+                if (res.status === 'success' && res.data) {
+                    const adv = res.data.advisor || {};
+                    const rag = res.data.rag_sources || [];
+
+                    document.getElementById('adv-assessment').innerText = adv.overall_assessment || 'N/A';
+                    document.getElementById('adv-disease-exp').innerText = adv.disease_explanation || 'N/A';
+                    document.getElementById('adv-treatment').innerText = adv.treatment_recommendation || 'N/A';
+                    document.getElementById('adv-fertilizer').innerText = adv.fertilizer_recommendation || 'N/A';
+                    document.getElementById('adv-irrigation').innerText = adv.irrigation_recommendation || 'N/A';
+                    document.getElementById('adv-soil').innerText = adv.soil_management || 'N/A';
+                    document.getElementById('adv-prevention').innerText = adv.prevention || 'N/A';
+
+                    const riskBadge = document.getElementById('adv-risk');
+                    const rLevel = adv.risk_level || 'Low';
+                    riskBadge.innerText = `Risk Level: ${rLevel}`;
+                    riskBadge.className = `status-badge ${rLevel.toLowerCase() === 'high' ? 'critical' : 'normal'}`;
+
+                    // Render Grounded RAG Sources
+                    const ragBox = document.getElementById('adv-rag-sources');
+                    if (rag.length > 0) {
+                        ragBox.innerHTML = rag.map(s => `
+                            <div class="rag-card">
+                                <div class="rag-doc-title">📄 ${s.source_doc} (Relevance Score: ${s.score})</div>
+                                <div class="rag-snippet">"${s.text}"</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        ragBox.innerHTML = '<div style="color: var(--text-muted);">No specific RAG sources retrieved.</div>';
+                    }
+                } else {
+                    alert('Advisor Error: ' + res.message);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.innerText = 'GENERATE FULL AI RECOMMENDATIONS';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+AGRISENSE AGRICULTURAL REFERENCE GUIDE 2: PLANT DISEASE DIAGNOSIS & MANAGEMENT
+
+1. APPLE SCAB (Venturia inaequalis)
+- Symptoms: Olive-green to brown velvety spots on leaf surfaces and fruit scab lesions.
+- Causes: Fungal spores overwintering in fallen leaves under high humidity and cool temperatures.
+- Treatment & Prevention: Apply preventative copper or sulfur-based fungicides during green-tip stage. Prune trees to increase canopy airflow and sunlight penetration. Rake and destroy fallen leaves in autumn.
+
+2. EARLY BLIGHT (Alternaria solani - Tomato & Potato)
+- Symptoms: Dark brown spots with concentric rings ("target-board" pattern) starting on lower older leaves, leading to yellowing and defoliation.
+- Causes: Fungal infection favored by warm temperature (24-29°C) and alternating wet and dry conditions.
+- Treatment & Prevention: Apply Chlorothalonil, Mancozeb, or copper hydroxide spray every 7-10 days. Ensure drip irrigation at soil level rather than overhead watering. Practice 3-year crop rotation with non-solanaceous crops.
+
+3. LATE BLIGHT (Phytophthora infestans - Tomato & Potato)
+- Symptoms: Water-soaked pale green or dark lesions on leaf tips, with white mold growth on underside during damp conditions. Tubers/fruits rot rapidly with foul odor.
+- Causes: Oomycete pathogen thriving in cold, wet, humid weather (15-20°C with >90% humidity). Highly destructive.
+- Treatment & Prevention: Apply systemic fungicides like Metalaxyl, Dimethomorph, or Cymoxanil immediately upon early detection. Remove and burn infected foliage immediately. Use certified disease-free seeds and resistant cultivars.
+
+4. TOMATO YELLOW LEAF CURL VIRUS (TYLCV)
+- Symptoms: Severe stunting of plants, upward curling of leaf margins, interveinal chlorosis, and drastically reduced fruit yield.
+- Causes: Geminivirus transmitted exclusively by the Silverleaf Whitefly (Bemisia tabaci).
+- Treatment & Prevention: Control whitefly vectors using yellow sticky traps, insecticidal soaps, or neem oil sprays. Cover young nursery beds with fine mesh nets (50 mesh). Remove infected plants to stop virus reservoir spread.
+
+5. CITRUS GREENING / HUANGLONGBING (Candidatus Liberibacter asiaticus - Orange / Citrus)
+- Symptoms: Asymmetrical blotchy mottling on leaves, yellow shoots, small lopsided bitter fruit with aborted seeds.
+- Causes: Bacterial pathogen transmitted by the Asian Citrus Psyllid (Diaphorina citri).
+- Treatment & Prevention: Systemic vector management using imidacloprid or thiamethoxam. Eradicate infected trees immediately. Apply balanced micronutrient foliar sprays (Zinc, Manganese, Boron) to sustain compromised trees.
+
+6. POWDERY MILDEW (Erysiphe spp. - Cherry, Squash, Grapes, Apple)
+- Symptoms: White to grayish powdery fungal patches on upper leaf surfaces, young stems, and buds.
+- Causes: High relative humidity at night and dry warm daytime conditions.
+- Treatment & Prevention: Apply Potassium Bicarbonate, Sulfur, or Neem oil. Avoid dense planting to allow ventilation.
+
+7. BACTERIAL SPOT (Xanthomonas spp. - Pepper, Tomato, Peach)
+- Symptoms: Small dark water-soaked spots on leaves and fruit, turning scab-like or sunken with yellow halo.
+- Causes: Seed-borne or splash-dispersed bacterial pathogen during warm wet weather.
+- Treatment & Prevention: Apply copper-maneb combinations. Avoid handling wet plants. Use hot water treated seeds.

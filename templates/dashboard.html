@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - Smart Agriculture Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">🌱</span>
+            <div>
+                <div class="logo-title">AGriSense</div>
+                <div class="logo-subtitle">Smart Agriculture Intelligence</div>
+            </div>
+        </div>
+        <nav>
+            <a href="/dashboard" class="nav-link active">Dashboard</a>
+            <a href="/crop-analysis" class="nav-link">Crop Analysis</a>
+            <a href="/disease-detection" class="nav-link">Disease Detection</a>
+            <a href="/advisor" class="nav-link">AI Advisor</a>
+            <a href="/history" class="nav-link">History</a>
+            <a href="/about" class="nav-link">About</a>
+            <a href="/logout" class="nav-link" style="color: #f87171;">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-title-section">
+            <div>
+                <h1>Executive Telemetry & Intelligence Overview</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+                    Welcome back, <strong>{{ current_user.name if current_user else 'Farmer' }}</strong>! Real-time IoT sensor telemetry & multimodal AI status.
+                </p>
+            </div>
+            <a href="/crop-analysis" class="btn-primary" style="width: auto; text-decoration: none; padding: 0.65rem 1.25rem;">
+                🚀 Start New Analysis
+            </a>
+        </div>
+
+        <!-- FEATURE CARDS NAVIGATION -->
+        <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #cbd5e1;">INTELLIGENCE MODULES</h2>
+        <div class="res-grid-two" style="margin-bottom: 2rem;">
+            
+            <div class="panel-card" style="margin-bottom: 0;">
+                <div class="panel-title" style="color: #34d399;">🌾 Crop & Soil Analysis</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                    Input NPK nutrients, pH, temperature, and rainfall to receive machine learning crop recommendations powered by Random Forest.
+                </p>
+                <a href="/crop-analysis" class="nav-link" style="display: inline-block; background-color: rgba(16, 185, 129, 0.15); color: #34d399; font-weight: 600;">Open Crop Analysis →</a>
+            </div>
+
+            <div class="panel-card" style="margin-bottom: 0;">
+                <div class="panel-title" style="color: #60a5fa;">🔬 Plant Disease Detection</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                    Upload leaf photos to run MobileNetV3 deep learning inference with Top-5 prediction probabilities and quality verification.
+                </p>
+                <a href="/disease-detection" class="nav-link" style="display: inline-block; background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; font-weight: 600;">Open Disease Detection →</a>
+            </div>
+
+        </div>
+
+        <!-- RECENT ANALYSES LOG -->
+        <div class="panel-card">
+            <div class="panel-title" style="justify-content: space-between;">
+                <span>📋 Recent Multimodal Analyses</span>
+                <a href="/history" style="font-size: 0.85rem; color: #38bdf8; text-decoration: none;">View Full History →</a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Crop Recommended</th>
+                            <th>Disease Status</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_analyses and recent_analyses|length > 0 %}
+                            {% for item in recent_analyses %}
+                            <tr>
+                                <td>#{{ item.id }}</td>
+                                <td>{{ item.timestamp }}</td>
+                                <td style="font-weight: 600; color: #34d399;">{{ item.recommended_crop|capitalize }}</td>
+                                <td>{{ item.disease }} ({{ item.health_status }})</td>
+                                <td>
+                                    <span class="status-badge {% if item.risk_level|lower == 'high' %}critical{% else %}normal{% endif %}">
+                                        {{ item.risk_level }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                                    No recent analysis logs. Run a crop or disease analysis to start tracking logs.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+AGRISENSE AGRICULTURAL REFERENCE GUIDE 1: CROP CULTIVATION & NPK NUTRIENT REQUIREMENTS
+
+1. RICE (Oryza sativa)
+- Ideal Soil Moisture: 70-80% (flooded/semi-aquatic conditions during initial growth).
+- Temperature: 20-35°C (optimal 25-30°C).
+- Humidity: 80-90%.
+- Soil pH: 5.5 - 6.5 (slightly acidic clay loam).
+- Nutrient Profile (NPK): High Nitrogen (80-100 kg/ha), Moderate Phosphorus (40 kg/ha), Moderate Potassium (40 kg/ha). High rainfall requirement (150-300 cm).
+- Management: Maintain 2-5 cm water level during tillering stage. Apply Urea in split doses.
+
+2. MAIZE (Zea mays)
+- Ideal Soil Moisture: 50-65%.
+- Temperature: 18-27°C.
+- Humidity: 55-75%.
+- Soil pH: 5.8 - 7.0.
+- Nutrient Profile (NPK): High Nitrogen (70-90 kg/ha), High Phosphorus (40-50 kg/ha), Potassium (40 kg/ha). Rainfall (60-110 cm).
+- Management: Well-drained fertile loam soil. Avoid waterlogging during seedling stage. Top-dress with Nitrogen at knee-high stage.
+
+3. APPLE (Malus domestica)
+- Ideal Soil Moisture: 45-60%.
+- Temperature: 15-24°C (requires chilling hours during winter).
+- Humidity: 60-70%.
+- Soil pH: 6.0 - 7.0 (loamy soil with good organic content).
+- Nutrient Profile (NPK): Balanced NPK (N: 20-30, P: 10-20, K: 20-30 ppm). Moderate rainfall (100-125 cm).
+- Management: Ensure drip irrigation during fruit expansion. Apply organic compost and zinc micronutrients annually.
+
+4. TOMATO (Solanum lycopersicum)
+- Ideal Soil Moisture: 50-60%.
+- Temperature: 21-29°C.
+- Humidity: 60-70%.
+- Soil pH: 6.0 - 6.8 (rich, well-drained sandy loam).
+- Nutrient Profile (NPK): N (40-60), P (35-50), K (40-60 ppm). High Calcium required to prevent Blossom End Rot.
+- Management: Regular drip irrigation to avoid moisture fluctuation. Mulch soil to prevent soil-borne fungal spores from splashing onto lower leaves.
+
+5. POTATO (Solanum tuberosum)
+- Ideal Soil Moisture: 60-70%.
+- Temperature: 15-20°C.
+- Humidity: 65-80%.
+- Soil pH: 5.0 - 6.5.
+- Nutrient Profile (NPK): High Potassium (N: 50, P: 50, K: 100 ppm) for tuber development.
+- Management: Hilling of soil around plants. Avoid excess Nitrogen late in the season to prevent weak skin setting.
+
+6. COTTON (Gossypium hirsutum)
+- Ideal Soil Moisture: 40-55%.
+- Temperature: 21-30°C.
+- Humidity: 40-60%.
+- Soil pH: 6.0 - 8.0 (black cotton soil / deep loam).
+- Nutrient Profile (NPK): N (100-120), P (40-50), K (40-50 kg/ha).
+- Management: Deep root system; requires alternate drying and wetting cycles. Avoid high humidity during boll opening stage.
+
+7. COFFEE (Coffea arabica / canephora)
+- Ideal Soil Moisture: 60-70%.
+- Temperature: 15-28°C.
+- Humidity: 70-85%.
+- Soil pH: 5.5 - 6.5 (deep, well-drained, acidic volcanic loam).
+- Nutrient Profile (NPK): High Potassium and Nitrogen (N: 100, P: 40, K: 100 kg/ha).
+- Management: Shade tree management required. Maintain leaf mulch to conserve organic matter.

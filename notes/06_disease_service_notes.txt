@@ -1,0 +1,107 @@
+FILE: services/disease_service.py
+
+Purpose:
+This file loads the trained deep learning disease model and performs inference on uploaded crop leaf images.
+
+Main class:
+- DiseaseService
+
+Core responsibilities:
+- Load model weights and class label mapping
+- Preprocess input leaf images for prediction
+- Validate whether an image is a plausible plant leaf
+- Predict disease class and confidence
+- Convert raw model output into readable crop and disease labels
+- Return top 5 disease predictions
+
+Model loading:
+- Model file expected at:
+  - models/disease_model/best_model.pth
+- Or fallback to:
+  - models/disease_model/disease_model.pth
+- Class mapping file:
+  - models/disease_model/class_names.json
+
+Architecture:
+- Uses MobileNetV3 Small, matching the model trained in training/train_disease_model.py.
+- The classifier head is rebuilt to match the number of classes defined in the mapping file.
+- The model is loaded onto the available device: GPU or CPU.
+
+Image preprocessing:
+The transform pipeline is:
+- Resize to 256x256
+- Center crop to 224x224
+- Convert to tensor
+- Normalize with ImageNet statistics
+
+This matches the training setup used for PlantVillage images.
+
+Leaf validation logic:
+The method is_valid_leaf_image(image) checks for basic image quality issues:
+- blank or low-contrast images
+- images without enough foliage-like color patterns
+- images that do not resemble a plant leaf
+
+It calculates RGB statistics and estimates whether the input has enough green or brown foliage-like pixels.
+
+If image fails the validity check, the result is:
+- crop: Unidentified
+- disease: No Plant Leaf Detected
+- health_status: Invalid Image
+- confidence: 0.0
+
+Class parsing:
+The method parse_class_label(raw_label) converts model output labels like:
+- Apple___Apple_scab
+- Tomato___healthy
+- Pepper,_bell___healthy
+
+into:
+- crop name
+- disease name
+- health_status (Healthy or Diseased)
+
+Prediction flow:
+1. Verify that the file exists.
+2. Open and convert the image to RGB.
+3. Run leaf validation.
+4. Apply preprocessing transform.
+5. Feed image into model.
+6. Apply softmax to get class probabilities.
+7. Select top 5 classes.
+8. Convert class IDs to human-readable labels.
+9. Compute reliability score:
+   - High: >= 80%
+   - Moderate: >= 60%
+   - Low: below 60%
+
+Return structure:
+- crop
+- disease
+- health_status
+- confidence
+- reliability
+- raw_class
+- top5_predictions
+
+Top 5 predictions:
+Each item contains:
+- raw_class
+- crop
+- disease
+- confidence
+
+Why this service is important:
+This is the deployed deep learning inference module. It translates leaf photos into usable disease diagnoses and confidence scores for the app.
+
+Edge cases handled:
+- Corrupted image file
+- Non-leaf images
+- Missing model files
+- Invalid image formats or blank images
+
+Important note:
+This service is not a full symptom explanation engine; it mainly provides classification and confidence output. The advisory logic is handled in the LLM and analysis layers.
+
+Key takeaway:
+This is the central DL inference file for plant disease recognition using a pretrained CNN with a real-time image classification interface.

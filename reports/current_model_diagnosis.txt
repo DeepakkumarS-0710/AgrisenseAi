@@ -1,0 +1,12 @@
+=== AGRISENSE DISEASE MODEL DIAGNOSIS REPORT ===
+
+Model weights file exists: models/disease_model/disease_model.pth
+Total state_dict keys: 244
+Current model output dimension (num_classes): 38
+Class mapping file exists: 38 entries
+
+--- IDENTIFIED PREPROCESSING & MODEL MISMATCHES ---
+1. Sampling Mismatch: Previous script sampled 60 images per class for 3 epochs without full validation tuning.
+2. Normalization Mismatch: Generic standard transforms were used without explicit ImageNet centering (Resize 256 -> CenterCrop 224).
+3. Indexing Order Hazard: Class mapping relied on dict ordering rather than explicit sorted class_names.json list.
+4. Inference Output: Previous disease_service only reported Top-1 class without Top-5 probabilities or leaf quality validation.

@@ -1,0 +1,87 @@
+FILE: app.py
+
+Purpose:
+This file is the main Flask application entry point. It controls authentication, page rendering, prediction APIs, IoT sensor APIs, and multimodal analysis orchestration.
+
+Key responsibilities:
+- Initialize Flask app and secret key
+- Create upload folder for image files
+- Call init_db() to set up SQLite schema
+- Provide route protection with login_required decorator
+- Handle user login, signup, logout, and session management
+- Render dashboard and analysis pages
+- Accept crop and disease analysis requests
+- Save sensor readings and analysis results
+- Run full multimodal analysis for each submission
+
+Important functions and logic:
+1. allowed_file(filename)
+- Checks whether uploaded image extension is valid.
+- Allowed: png, jpg, jpeg, webp.
+
+2. login_required(f)
+- Protects routes so only logged-in users can access analytics pages and APIs.
+
+3. inject_user()
+- Adds current_user to all template contexts.
+
+4. Route: /
+- Redirects logged-in users to dashboard.
+- Otherwise redirects to login.
+
+5. Authentication routes
+- /login
+- /signup
+- /logout
+- These handle user login, form validation, and session creation.
+
+6. Page routes
+- /dashboard
+- /crop-analysis
+- /disease-detection
+- /advisor
+- /history
+- These render the frontend views.
+
+7. /analyze
+- The most important route.
+- Accepts JSON or form data from frontend.
+- Validates sensor values and ranges.
+- Saves sensor readings to database.
+- Saves uploaded leaf image to uploads folder if present.
+- Calls run_multimodal_analysis(...)
+- Saves final analysis result to SQLite.
+- Returns a JSON response with analysis details.
+
+8. /predict-crop
+- Exposes a crop prediction API.
+- Calls predict_crop(...) from services.crop_service.
+
+9. /detect-disease
+- Exposes disease detection API.
+- Validates uploaded image.
+- Calls predict_disease(...) from disease service.
+- Also retrieves relevant RAG information.
+
+10. IoT endpoints
+- POST /api/sensors: accepts sensor JSON and stores values
+- GET /api/sensors/latest: returns latest reading
+- GET /api/sensors/history: returns sensor history
+
+Input validation features:
+- Sensor numbers are checked for reasonable biological ranges.
+- Image file types are restricted.
+- File size limit is set to 16 MB.
+
+Multimodal logic:
+The app brings together:
+- sensor_data
+- crop recommendation prediction
+- disease detection prediction
+- retrieved agriculture knowledge
+- LLM advisory output
+
+It then returns a single analysis object for UI display and database storage.
+
+Key highlight:
+This file coordinates the full AGriSense pipeline; it is the central orchestration layer of the system.

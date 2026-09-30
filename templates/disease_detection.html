@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - Disease Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo-area"><span class="logo-icon">🌱</span><div><div class="logo-title">AGriSense</div><div class="logo-subtitle">Smart Agriculture Intelligence</div></div></div>
+        <nav><a href="/dashboard" class="nav-link">Dashboard</a><a href="/crop-analysis" class="nav-link">Crop Analysis</a><a href="/disease-detection" class="nav-link active">Disease Detection</a><a href="/advisor" class="nav-link">AI Advisor</a><a href="/history" class="nav-link">History</a><a href="/about" class="nav-link">About</a><a href="/logout" class="nav-link logout-link">Logout</a></nav>
+    </header>
+
+    <main class="disease-page">
+        <div class="disease-page-heading"><div><p class="eyebrow">FIELD HEALTH / IMAGE ANALYSIS</p><h1>Disease Detection</h1><p>Upload a clear leaf image to identify disease patterns and receive grounded treatment guidance.</p></div><div class="model-status"><span class="status-dot"></span><div><strong>AI Model Status</strong><small>Ready for analysis</small></div></div></div>
+        <div class="disease-layout">
+            <section class="disease-panel upload-panel">
+                <div class="disease-panel-heading"><div><span class="disease-icon">▧</span><strong>Input Image</strong></div><span class="panel-kicker">PNG, JPG, WEBP</span></div>
+                <p class="panel-description">Use a well-lit image with the affected leaf filling most of the frame.</p>
+                <form id="disease-form" enctype="multipart/form-data"><div class="disease-upload-box" id="drop-zone-d"><input type="file" id="disease-image-input" name="image" accept="image/*" required><div id="upload-placeholder-d"><div class="upload-mark">↑</div><strong>Drop leaf image here</strong><span>or click to browse from your device</span></div><img id="image-preview-d" alt="Selected leaf preview"></div><div class="selected-file" id="selected-file">No image selected</div><button type="submit" class="disease-primary-btn" id="disease-btn"><span class="spinner" id="disease-spinner"></span><span id="disease-btn-text">Analyze Leaf</span></button></form>
+            </section>
+
+            <section class="disease-panel diagnosis-panel">
+                <div class="disease-panel-heading"><div><span class="disease-icon">◇</span><strong>Detection Result</strong></div><span class="status-badge unavailable" id="d-reliability">Pending</span></div>
+                <p class="panel-description">The model result and confidence appear after image analysis.</p>
+                <div class="diagnosis-hero"><div class="diagnosis-thumb"><img id="result-image" alt="Analyzed leaf"></div><div class="diagnosis-name"><span id="d-health-status">Awaiting image</span><h2 id="d-disease-name">Upload a leaf to begin</h2><small id="d-crop-name">Crop not identified</small></div><div class="diagnosis-confidence"><span id="d-confidence">--%</span><small>Confidence</small></div></div>
+                <div class="diagnosis-facts"><div><small>Disease type</small><strong id="disease-type">--</strong></div><div><small>Affected part</small><strong id="affected-part">Leaf</strong></div><div><small>Risk status</small><strong id="disease-risk">Pending</strong></div></div>
+                <div class="why-card"><strong>Why this prediction?</strong><p id="d-summary">Upload an image and the detection explanation will appear here.</p></div>
+                <div class="details-card"><strong>Disease details</strong><div class="detail-row"><span>Scientific / class label</span><b id="d-raw-class">--</b></div><div class="detail-row"><span>Model reliability</span><b id="d-reliability-detail">--</b></div></div>
+            </section>
+
+            <section class="disease-panel actions-panel">
+                <div class="disease-panel-heading"><div><span class="disease-icon">✦</span><strong>Recommended Actions</strong></div></div><p class="panel-description">Follow these steps to control the disease and protect nearby plants.</p>
+                <div id="action-list" class="action-list"><div class="empty-actions">Actions will appear after diagnosis.</div></div>
+                <div class="pro-tip"><span>!</span><div><strong>Pro tip</strong><p id="d-monitoring">Early action is usually more effective. Confirm chemical choices with your local agricultural extension service.</p></div></div>
+            </section>
+        </div>
+
+        <section class="disease-bottom-grid"><div class="disease-panel rag-grounding-panel"><div class="disease-panel-heading"><div><span class="disease-icon">⌁</span><strong>Disease Treatment &amp; Management RAG Grounding</strong></div><span class="source-count" id="source-count">0 sources</span></div><p class="panel-description">Treatment guidance is grounded in the agricultural reference documents retrieved for this diagnosis.</p><div id="d-rag-sources" class="source-list"><div class="empty-actions">Retrieved treatment sources will appear here.</div></div></div><div class="disease-panel predictions-panel"><div class="disease-panel-heading"><div><span class="disease-icon">≋</span><strong>Model alternatives</strong></div></div><p class="panel-description">Other classes considered by the vision model.</p><div id="top5-container" class="prediction-list"><div class="empty-actions">Alternative predictions will appear here.</div></div></div></section>
+    </main>
+
+    <script>
+const form = document.getElementById('disease-form');
+const input = document.getElementById('disease-image-input');
+const dropZone = document.getElementById('drop-zone-d');
+const preview = document.getElementById('image-preview-d');
+const placeholder = document.getElementById('upload-placeholder-d');
+const fileLabel = document.getElementById('selected-file');
+
+function isImageFile(file) {
+    if (!file) return false;
+
+    const allowedTypes = [
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/webp'
+    ];
+
+    const allowedExtensions = /\.(png|jpg|jpeg|webp)$/i;
+
+    return allowedTypes.includes(file.type) ||
+           allowedExtensions.test(file.name);
+}
+
+function showFile(file) {
+
+    if (!file) {
+        fileLabel.textContent = "No image selected";
+        return;
+    }
+
+    if (!isImageFile(file)) {
+        fileLabel.textContent = "Please select a PNG, JPG, JPEG or WEBP image.";
+        preview.style.display = "none";
+        placeholder.style.display = "block";
+        return;
+    }
+
+    // Show selected file name
+    fileLabel.textContent =
+        `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+
+    // Preview image
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        preview.src = event.target.result;
+        preview.style.display = "block";
+
+        placeholder.style.display = "none";
+
+        // Also show image in result area
+        document.getElementById("result-image").src =
+            event.target.result;
+
+        document.getElementById("result-image").style.display =
+            "block";
+    };
+
+    reader.onerror = function() {
+        fileLabel.textContent = "Unable to read image.";
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+// Click upload box
+dropZone.addEventListener("click", function(event) {
+
+    if (event.target !== input) {
+        input.click();
+    }
+
+});
+
+
+// Normal file selection
+input.addEventListener("change", function() {
+
+    console.log("Selected file:", input.files[0]);
+
+    if (input.files && input.files.length > 0) {
+        showFile(input.files[0]);
+    }
+
+});
+
+
+// Drag over
+dropZone.addEventListener("dragover", function(event) {
+
+    event.preventDefault();
+
+    dropZone.classList.add("dragover");
+
+});
+
+
+// Drag enter
+dropZone.addEventListener("dragenter", function(event) {
+
+    event.preventDefault();
+
+    dropZone.classList.add("dragover");
+
+});
+
+
+// Drag leave
+dropZone.addEventListener("dragleave", function(event) {
+
+    event.preventDefault();
+
+    dropZone.classList.remove("dragover");
+
+});
+
+
+// Drop image
+dropZone.addEventListener("drop", function(event) {
+
+    event.preventDefault();
+
+    dropZone.classList.remove("dragover");
+
+    const files = event.dataTransfer.files;
+
+    if (!files || files.length === 0) {
+        return;
+    }
+
+    const file = files[0];
+
+    // Put dropped file into input
+    const dataTransfer = new DataTransfer();
+
+    dataTransfer.items.add(file);
+
+    input.files = dataTransfer.files;
+
+    showFile(file);
+
+});
+
+
+// Submit form
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    // Make sure image is selected
+    if (!input.files || input.files.length === 0) {
+
+        alert("Please select a leaf image first.");
+
+        return;
+    }
+
+    const file = input.files[0];
+
+    if (!isImageFile(file)) {
+
+        alert("Please select a PNG, JPG, JPEG or WEBP image.");
+
+        return;
+    }
+
+    const button = document.getElementById("disease-btn");
+    const spinner = document.getElementById("disease-spinner");
+    const buttonText = document.getElementById("disease-btn-text");
+
+    button.disabled = true;
+
+    spinner.style.display = "inline-block";
+
+    buttonText.textContent = "Analyzing...";
+
+    try {
+
+        const formData = new FormData();
+
+        // IMPORTANT:
+        // Flask expects request.files['image']
+        formData.append("image", file);
+
+        console.log("Sending image:", file.name);
+        console.log("Image size:", file.size);
+        console.log("Image type:", file.type);
+
+        const response = await fetch("/detect-disease", {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+        const result = await response.json();
+
+        console.log("Disease API response:", result);
+
+        if (result.status !== "success" || !result.data) {
+
+            throw new Error(
+                result.message || "Disease detection failed."
+            );
+
+        }
+
+        const data = result.data;
+
+        if (data.health_status === "Invalid Image") {
+
+            throw new Error(
+                data.message || "Please upload a clear plant leaf image."
+            );
+
+        }
+
+        const management = data.management || {};
+
+        // -------------------------------
+        // RESULT
+        // -------------------------------
+
+        document.getElementById("d-health-status").textContent =
+            data.health_status || "Unknown";
+
+        document.getElementById("d-disease-name").textContent =
+            data.disease || "Unknown disease";
+
+        document.getElementById("d-crop-name").textContent =
+            data.crop || "Unknown crop";
+
+        document.getElementById("d-confidence").textContent =
+            `${data.confidence || 0}%`;
+
+        document.getElementById("disease-type").textContent =
+            data.disease &&
+            data.disease.toLowerCase().includes("healthy")
+                ? "Healthy tissue"
+                : "Disease pattern";
+
+        document.getElementById("disease-risk").textContent =
+            management.status || "Review";
+
+        document.getElementById("d-summary").textContent =
+            management.summary ||
+            "The model completed the image analysis.";
+
+        document.getElementById("d-raw-class").textContent =
+            data.raw_class ||
+            `${data.crop} / ${data.disease}`;
+
+        document.getElementById("d-reliability-detail").textContent =
+            data.reliability || "--";
+
+
+        // Reliability badge
+        const badge =
+            document.getElementById("d-reliability");
+
+        badge.textContent =
+            data.reliability || "Analyzed";
+
+
+        if (data.reliability === "High") {
+
+            badge.className = "status-badge normal";
+
+        } else if (data.reliability === "Low") {
+
+            badge.className = "status-badge critical";
+
+        } else {
+
+            badge.className = "status-badge high";
+
+        }
+
+
+        // -------------------------------
+        // ACTIONS
+        // -------------------------------
+
+        const treatment =
+            management.treatment || [];
+
+        const prevention =
+            management.prevention || [];
+
+        const actions =
+            [...treatment, ...prevention];
+
+        const actionList =
+            document.getElementById("action-list");
+
+        if (actions.length > 0) {
+
+            actionList.innerHTML =
+                actions.map(function(item, index) {
+
+                    const type =
+                        index < treatment.length
+                            ? "Treatment step"
+                            : "Prevention step";
+
+                    return `
+                        <div class="action-item">
+                            <span>${index + 1}</span>
+
+                            <div>
+                                <strong>${type}</strong>
+                                <p>${item}</p>
+                            </div>
+                        </div>
+                    `;
+
+                }).join("");
+
+        } else {
+
+            actionList.innerHTML =
+                '<div class="empty-actions">No specific actions returned.</div>';
+
+        }
+
+
+        document.getElementById("d-monitoring").textContent =
+            management.monitoring ||
+            management.grounding ||
+            "Monitor the crop regularly for changes.";
+
+
+        // -------------------------------
+        // RAG SOURCES
+        // -------------------------------
+
+        const sources =
+            management.sources ||
+            data.rag_sources ||
+            [];
+
+        document.getElementById("source-count").textContent =
+            `${sources.length} source${sources.length === 1 ? "" : "s"}`;
+
+
+        if (sources.length > 0) {
+
+            document.getElementById("d-rag-sources").innerHTML =
+                sources.map(function(source) {
+
+                    return `
+                        <article class="source-item">
+
+                            <strong>
+                                ${source.source_doc || "Agricultural guide"}
+                            </strong>
+
+                            <span>
+                                Retrieved grounding
+                            </span>
+
+                            <p>
+                                ${source.text || ""}
+                            </p>
+
+                        </article>
+                    `;
+
+                }).join("");
+
+        } else {
+
+            document.getElementById("d-rag-sources").innerHTML =
+                '<div class="empty-actions">No matching source was retrieved.</div>';
+
+        }
+
+
+        // -------------------------------
+        // TOP 5 PREDICTIONS
+        // -------------------------------
+
+        const predictions =
+            data.top5_predictions || [];
+
+        if (predictions.length > 0) {
+
+            document.getElementById("top5-container").innerHTML =
+                predictions.map(function(item) {
+
+                    const label =
+                        String(item.raw_class || "")
+                            .replace(/___/g, " / ")
+                            .replace(/_/g, " ");
+
+                    return `
+                        <div class="prediction-item">
+
+                            <span>${label}</span>
+
+                            <b>
+                                ${item.confidence}%
+                            </b>
+
+                        </div>
+                    `;
+
+                }).join("");
+
+        } else {
+
+            document.getElementById("top5-container").innerHTML =
+                '<div class="empty-actions">No alternative predictions.</div>';
+
+        }
+
+
+    } catch (error) {
+
+        console.error("Disease detection error:", error);
+
+        alert(error.message);
+
+    } finally {
+
+        button.disabled = false;
+
+        spinner.style.display = "none";
+
+        buttonText.textContent = "Analyze Leaf";
+
+    }
+
+});
+</script>
++</body>
++</html>
