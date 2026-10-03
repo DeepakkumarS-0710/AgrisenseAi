@@ -74,6 +74,7 @@ final_data/
 *.keras
 *.pth
 *.onnx
+!models/disease_model/best_model.pth
 
 # =========================================================
 # Logs

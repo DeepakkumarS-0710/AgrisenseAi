@@ -761,6 +761,126 @@
                 padding: 17px;
             }
         }
+        .crop-signal {
+            display: inline-flex;
+            margin: 14px 0 8px;
+            padding: 6px 10px;
+            border: 1px solid rgba(52, 211, 153, 0.35);
+            border-radius: 999px;
+            color: #80f0c6;
+            background: rgba(16, 185, 129, 0.1);
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .tn-crop-library {
+            margin-top: 30px;
+            padding: 24px;
+            border: 1px solid #304157;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #17273a, #111e30);
+        }
+        .tn-crop-library-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 20px;
+        }
+        .tn-crop-eyebrow {
+            color: #61dbb1;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+        }
+        .tn-crop-library h2 {
+            margin: 5px 0;
+            color: #f1f7fb;
+            font-size: 21px;
+        }
+        .tn-crop-library-head > div > p:last-child,
+        .tn-crop-card > p {
+            color: #91a7ba;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+        .tn-crop-filters {
+            display: flex;
+            gap: 10px;
+            min-width: min(100%, 390px);
+        }
+        .tn-crop-filters label { display: grid; gap: 5px; flex: 1; }
+        .tn-crop-filters label span { color: #a9bdcc; font-size: 10px; font-weight: 600; }
+        .tn-crop-filters input, .tn-crop-filters select {
+            min-width: 0;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #3a4b60;
+            border-radius: 6px;
+            background: #101b2b;
+            color: #f3f7fb;
+            font: inherit;
+            font-size: 12px;
+        }
+        .tn-crop-notice {
+            margin: 18px 0;
+            padding: 12px 14px;
+            border-left: 3px solid #e2b65b;
+            border-radius: 5px;
+            background: rgba(226, 182, 91, 0.08);
+            color: #c2c3ad;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+        .tn-crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+            gap: 12px;
+        }
+        .tn-crop-card {
+            display: grid;
+            align-content: start;
+            gap: 8px;
+            padding: 15px;
+            border: 1px solid #2b4055;
+            border-radius: 9px;
+            background: rgba(7, 22, 39, 0.7);
+        }
+        .tn-crop-card[hidden] { display: none; }
+        .tn-crop-card-top { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+        .tn-crop-group, .tn-crop-supported, .tn-crop-unavailable {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.25px;
+            text-transform: uppercase;
+        }
+        .tn-crop-group { color: #8fb2c7; }
+        .tn-crop-supported { color: #70e4b9; }
+        .tn-crop-unavailable { color: #f0c56d; }
+        .tn-crop-card h3 { color: #f1f7fb; font-size: 15px; }
+        .tn-crop-card .tn-crop-season { color: #d6e3e8; }
+        .tn-crop-select {
+            justify-self: start;
+            margin-top: 4px;
+            border: 0;
+            border-radius: 5px;
+            padding: 8px 10px;
+            background: rgba(16, 185, 129, 0.14);
+            color: #68e5b7;
+            font: inherit;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .tn-crop-select:hover { background: rgba(16, 185, 129, 0.24); }
+        .tn-crop-empty, .tn-crop-selected { margin-top: 14px; color: #7fe5be; font-size: 12px; }
+        .tn-crop-source { margin-top: 15px; color: #6f8799; font-size: 10px; }
+        @media (max-width: 700px) {
+            .tn-crop-library { padding: 17px; }
+            .tn-crop-library-head { align-items: stretch; flex-direction: column; }
+            .tn-crop-filters { min-width: 0; }
+        }
+        @media (max-width: 440px) {
+            .tn-crop-filters { flex-direction: column; }
+        }
     </style>
 </head>
 
@@ -792,6 +912,10 @@
             Dashboard
         </a>
 
+        <a href="/soil-monitoring">
+            Soil Monitor
+        </a>
+
         <a href="/crop-analysis" class="active">
             Crop Analysis
         </a>
@@ -800,7 +924,7 @@
             Disease Detection
         </a>
 
-        <a href="/ai-advisor">
+        <a href="/advisor">
             AI Advisor
         </a>
 
@@ -868,8 +992,8 @@
                 Crop Prediction Inputs
             </div>
 
-            <div class="card-subtitle">
-                Random Forest Classification
+            <div class="card-subtitle" id="cropModelName">
+                Cross-validated crop classifier
             </div>
 
         </div>
@@ -1147,6 +1271,10 @@
                     Recommended Crop
                 </div>
 
+                <div class="crop-signal" id="cropSignal">
+                    Waiting for field inputs
+                </div>
+
                 <div
                     class="crop-name"
                     id="recommendedCrop"
@@ -1182,10 +1310,10 @@
 
 
                 <p class="confidence-note">
-                    The confidence value represents the probability
-                    produced by the trained classification model.
-                    It is not a guaranteed measure of crop suitability.
+                    Calibrated class score from the model's training examples.
+                    It is not a prediction of yield or planting success.
                 </p>
+                <p class="confidence-note" id="recommendationEvidence"></p>
 
             </div>
 
@@ -1331,6 +1459,66 @@
     </section>
 
 
+    <section class="tn-crop-library" aria-labelledby="tn-crop-title">
+        <div class="tn-crop-library-head">
+            <div>
+                <p class="tn-crop-eyebrow">REGIONAL CROP REFERENCE</p>
+                <h2 id="tn-crop-title">Crops grown across Tamil Nadu</h2>
+                <p>Browse common local crops and compare your intended crop with the soil analysis.</p>
+            </div>
+            <div class="tn-crop-filters">
+                <label>
+                    <span>Search crops</span>
+                    <input type="search" id="tnCropSearch" placeholder="Try groundnut or paddy">
+                </label>
+                <label>
+                    <span>Crop group</span>
+                    <select id="tnCropGroup">
+                        <option value="all">All crops</option>
+                        <option value="Cereals">Cereals</option>
+                        <option value="Millets">Millets</option>
+                        <option value="Pulses">Pulses</option>
+                        <option value="Oilseeds">Oilseeds</option>
+                        <option value="Commercial">Commercial crops</option>
+                        <option value="Plantation">Plantation</option>
+                        <option value="Horticulture">Horticulture</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <p class="tn-crop-notice">
+            The crop model recognizes 22 labeled crops. Items marked “Regional option” are not yet classified by that model.
+            District, season, water availability and variety still matter; confirm planting decisions with your local KVK or TNAU advisory.
+        </p>
+        <div class="tn-crop-grid" id="tnCropGrid">
+            {% for crop in tamil_nadu_crops %}
+            <article class="tn-crop-card"
+                     data-group="{{ crop.group }}"
+                     data-search="{{ (crop.name ~ ' ' ~ crop.group ~ ' ' ~ crop.season ~ ' ' ~ crop.note)|lower }}">
+                <div class="tn-crop-card-top">
+                    <span class="tn-crop-group">{{ crop.group }}</span>
+                    {% if crop.model_label %}
+                    <span class="tn-crop-supported">In current model</span>
+                    {% else %}
+                    <span class="tn-crop-unavailable">Regional option</span>
+                    {% endif %}
+                </div>
+                <h3>{{ crop.name }}</h3>
+                <p class="tn-crop-season">{{ crop.season }}</p>
+                <p>{{ crop.note }}</p>
+                <button type="button" class="tn-crop-select"
+                        data-crop-name="{{ crop.name }}"
+                        data-crop-value="{{ crop.model_label or crop.name|lower }}">
+                    Set as planned crop
+                </button>
+            </article>
+            {% endfor %}
+        </div>
+        <p class="tn-crop-empty" id="tnCropEmpty" hidden>No crops match these filters.</p>
+        <p class="tn-crop-selected" id="tnCropSelected" role="status" aria-live="polite"></p>
+        <p class="tn-crop-source">Regional crop list reflects Tamil Nadu Agricultural University and Government of Tamil Nadu crop references.</p>
+    </section>
+
     <div class="footer-note">
         AgriSense AI • Smart Agriculture Intelligence System
     </div>
@@ -1346,6 +1534,10 @@
 
     const latestSensors =
         {{ (latest_sensors or {}) | tojson }};
+
+    const cropSignal = document.getElementById("cropSignal");
+    const recommendationEvidence = document.getElementById("recommendationEvidence");
+    const cropModelName = document.getElementById("cropModelName");
 
 
     /* =====================================================
@@ -1617,6 +1809,15 @@
         document.getElementById(
             "recommendedCrop"
         ).textContent = crop;
+
+        cropSignal.textContent =
+            data.recommendation_signal || "Model result";
+        recommendationEvidence.textContent =
+            data.recommendation_evidence ||
+            "Compare this result with your planned crop and district advisory.";
+        cropModelName.textContent =
+            (data.model_name || "Crop classifier") + " · " +
+            Number(data.model_class_count || 0) + " trained crop labels";
 
 
         /* -----------------------------
@@ -2013,6 +2214,41 @@
 
         }
     );
+
+    function filterTamilNaduCrops() {
+        const query = document.getElementById("tnCropSearch").value.trim().toLowerCase();
+        const group = document.getElementById("tnCropGroup").value;
+        let visible = 0;
+        document.querySelectorAll(".tn-crop-card").forEach(function(card) {
+            const matchesQuery = card.dataset.search.includes(query);
+            const matchesGroup = group === "all" || card.dataset.group === group;
+            card.hidden = !(matchesQuery && matchesGroup);
+            if (!card.hidden) visible += 1;
+        });
+        document.getElementById("tnCropEmpty").hidden = visible !== 0;
+    }
+
+    document.getElementById("tnCropSearch").addEventListener("input", filterTamilNaduCrops);
+    document.getElementById("tnCropGroup").addEventListener("change", filterTamilNaduCrops);
+    document.querySelectorAll(".tn-crop-select").forEach(function(button) {
+        button.addEventListener("click", function() {
+            const select = document.getElementById("planned_crop");
+            const value = button.dataset.cropValue;
+            let option = Array.from(select.options).find(function(item) {
+                return item.value === value;
+            });
+            if (!option) {
+                option = document.createElement("option");
+                option.value = value;
+                option.textContent = button.dataset.cropName;
+                select.appendChild(option);
+            }
+            select.value = value;
+            document.getElementById("tnCropSelected").textContent =
+                button.dataset.cropName + " set as your planned crop. This does not change the model's ranked result.";
+            select.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+    });
 
 </script>
 

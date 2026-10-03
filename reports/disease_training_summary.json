@@ -1,0 +1,16 @@
+{
+  "plantvillage_test": {
+    "images": 1736,
+    "classes_evaluated": 38,
+    "accuracy": 92.57,
+    "macro_f1": 92.64
+  },
+  "plantdoc_field_test": {
+    "images": 146,
+    "classes_evaluated": 17,
+    "accuracy": 41.78,
+    "macro_f1": 40.81
+  },
+  "temperature_scale": 0.730255663394928,
+  "checkpoint": "C:\\Users\\Deepak\\OneDrive\\Desktop\\Agrisense_AI_new - Copy\\agrisense (3)\\agrisense\\models\\disease_model\\best_model.pth"
+}

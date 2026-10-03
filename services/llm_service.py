@@ -81,7 +81,7 @@ class LLMService:
 
         disease_name = disease_pred.get(
             "disease",
-            "None (Healthy)"
+            "No image diagnosis"
         )
 
         disease_conf = disease_pred.get(
@@ -91,7 +91,12 @@ class LLMService:
 
         health_status = disease_pred.get(
             "health_status",
-            "Healthy"
+            "Unknown"
+        )
+
+        disease_reliability = disease_pred.get(
+            "reliability",
+            "Unknown"
         )
 
 
@@ -135,6 +140,7 @@ PLANT DISEASE DETECTION MODEL:
 - Health Status: {health_status}
 - Detected Disease: {disease_name}
 - Confidence: {disease_conf}%
+- Reliability: {disease_reliability}
 
 RETRIEVED RAG KNOWLEDGE:
 {rag_text}
@@ -143,12 +149,15 @@ IMPORTANT CONSTRAINTS:
 
 1. Do NOT invent or alter sensor readings.
 2. Do NOT claim a disease was detected if the disease model predicted Healthy.
-3. Base recommendations on the provided sensor data, predictions,
+3. If disease reliability is not High, do NOT treat the predicted disease as confirmed or recommend disease-specific treatment. Ask the farmer to photograph more leaves and get local confirmation before treatment.
+4. Describe the crop output as the closest match to the model's training examples, not as an optimal crop or a harvest-success probability.
+5. NPK sensor units and calibration are not provided. Do NOT label nutrients low or high and do NOT suggest fertilizer doses from those values; recommend a soil test.
+6. Base recommendations on the provided sensor data, predictions,
    and retrieved agricultural knowledge.
-4. Do not invent information that contradicts the retrieved knowledge.
-5. Return ONLY valid JSON.
-6. Every required field must be present.
-7. risk_level must be exactly one of:
+7. Do not invent information that contradicts the retrieved knowledge.
+8. Return ONLY valid JSON.
+9. Every required field must be present.
+10. risk_level must be exactly one of:
    Low, Medium, High, Critical.
 
 Return JSON with exactly these keys:
@@ -386,7 +395,10 @@ Return JSON with exactly these keys:
                 )
 
 
-                return result
+                return self._enforce_disease_confirmation(
+                    result,
+                    disease_pred,
+                )
 
 
             # =====================================================
@@ -414,7 +426,7 @@ Return JSON with exactly these keys:
         # FALLBACK ENGINE
         # =========================================================
 
-        return self._generate_expert_fallback(
+        result = self._generate_expert_fallback(
 
             sensor_data,
 
@@ -428,8 +440,47 @@ Return JSON with exactly these keys:
 
             health_status,
 
+            disease_reliability,
+
             rag_context
         )
+        return self._enforce_disease_confirmation(result, disease_pred)
+
+
+    @staticmethod
+    def _enforce_disease_confirmation(result, disease_pred):
+        """Keep uncertain image matches from producing disease treatment advice."""
+        health_status = str(disease_pred.get("health_status", "")).lower()
+        reliability = str(disease_pred.get("reliability", "")).lower()
+        has_image_classification = health_status in {"healthy", "diseased"}
+        if not has_image_classification or reliability == "high":
+            return result
+
+        confirmation = (
+            "The image result is not high reliability, so it is not a confirmed diagnosis. "
+            "Photograph several affected and healthy leaves, then ask a local KVK or "
+            "agricultural extension officer to confirm symptoms before treatment."
+        )
+        existing_assessment = str(result.get("overall_assessment", "")).strip()
+        result["overall_assessment"] = (
+            existing_assessment + " " + confirmation
+            if existing_assessment else confirmation
+        )
+        result["disease_explanation"] = confirmation
+        result["possible_causes"] = (
+            "No cause was assigned because the image match needs confirmation."
+        )
+        result["treatment_recommendation"] = (
+            "Do not apply disease-specific pesticides or remove plants based only on this image. "
+            "Confirm the symptoms locally first."
+        )
+        result["prevention"] = (
+            "Continue routine scouting, keep tools clean, and avoid moving between wet plants."
+        )
+        result["monitoring_advice"] = (
+            "Check nearby plants over the next few days and record whether symptoms are spreading."
+        )
+        return result
 
 
     # =========================================================
@@ -444,6 +495,7 @@ Return JSON with exactly these keys:
         disease,
         disease_conf,
         health_status,
+        disease_reliability,
         rag_context
     ):
 
@@ -501,6 +553,9 @@ Return JSON with exactly these keys:
             str(health_status).lower()
             == "diseased"
 
+            and str(disease_reliability).lower()
+            == "high"
+
             and
 
             "healthy"
@@ -511,6 +566,11 @@ Return JSON with exactly these keys:
         # =================================================
         # RISK ASSESSMENT
         # =================================================
+
+        is_healthy = (
+            str(health_status).lower() == "healthy"
+            and str(disease_reliability).lower() == "high"
+        )
 
         if is_diseased:
 
@@ -554,12 +614,12 @@ Return JSON with exactly these keys:
 
         assessment = (
 
-            f"The crop recommendation model identifies "
-            f"'{crop}' as optimal for your field with "
-            f"{crop_conf}% confidence based on NPK "
+            f"The crop recommendation model's closest match is "
+            f"'{crop}' ({crop_conf}% model score) for the submitted NPK "
             f"({n}:{p}:{k}), temperature {temp}°C, "
             f"humidity {hum}%, soil pH {ph}, and "
-            f"rainfall {rain}mm."
+            f"rainfall {rain}mm. This score is a match to labeled examples, "
+            "not a forecast of planting success."
         )
 
 
@@ -573,7 +633,7 @@ Return JSON with exactly these keys:
                 f"{disease_conf}% confidence."
             )
 
-        else:
+        elif is_healthy:
 
             assessment += (
 
@@ -581,6 +641,12 @@ Return JSON with exactly these keys:
                 f"HEALTHY crop condition with no major "
                 f"active foliar pathogen detected "
                 f"({disease_conf}% confidence)."
+            )
+
+        else:
+            assessment += (
+                " The leaf-image result is not reliable enough to confirm a disease "
+                "or a healthy condition; seek local confirmation before treatment."
             )
 
 
@@ -734,7 +800,7 @@ Return JSON with exactly these keys:
                 )
 
 
-        else:
+        elif is_healthy:
 
             dis_exp = (
                 "No active plant disease detected. "
@@ -757,6 +823,20 @@ Return JSON with exactly these keys:
                 "Inspect foliage weekly, ensure adequate "
                 "plant spacing, and maintain balanced "
                 "soil nutrients."
+            )
+
+        else:
+            dis_exp = (
+                "The leaf-image match is uncertain, so no disease or healthy status "
+                "is confirmed."
+            )
+            causes = "No cause was assigned because the image result needs confirmation."
+            treatment = (
+                "Do not apply disease-specific pesticides or remove plants based only "
+                "on this image. Ask a local agricultural officer to confirm symptoms."
+            )
+            prevention = (
+                "Continue routine scouting and keep tools clean after handling affected plants."
             )
 
 
@@ -801,34 +881,12 @@ Return JSON with exactly these keys:
         # FERTILIZER ADVICE
         # =================================================
 
-        if n < 30:
-
-            fert_adv = (
-
-                "Nitrogen level is low. Follow a "
-                "soil-test-based nitrogen fertilizer "
-                "program using appropriate split doses."
-            )
-
-
-        elif n > 100:
-
-            fert_adv = (
-
-                "Nitrogen level is high. Avoid excessive "
-                "nitrogen fertilizer application because "
-                "it can promote excessive vegetative growth."
-            )
-
-
-        else:
-
-            fert_adv = (
-
-                f"Current NPK values are {n}:{p}:{k}. "
-                "Maintain balanced nutrition and use "
-                "soil-test-based fertilizer applications."
-            )
+        fert_adv = (
+            f"The sensor reported N:P:K values of {n}:{p}:{k}. "
+            "Sensor units and calibration are unknown, so these readings cannot show "
+            "whether nutrients are deficient or excessive. Use a soil test and "
+            "crop- and district-specific guidance before choosing fertilizer or a dose."
+        )
 
 
         # =================================================

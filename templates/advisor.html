@@ -18,11 +18,11 @@
         </div>
         <nav>
             <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/soil-monitoring" class="nav-link">Soil Monitor</a>
             <a href="/crop-analysis" class="nav-link">Crop Analysis</a>
             <a href="/disease-detection" class="nav-link">Disease Detection</a>
             <a href="/advisor" class="nav-link active">AI Advisor</a>
             <a href="/history" class="nav-link">History</a>
-            <a href="/about" class="nav-link">About</a>
             <a href="/logout" class="nav-link" style="color: #f87171;">Logout</a>
         </nav>
     </header>
@@ -79,6 +79,25 @@
                             <label for="rainfall">Rainfall (mm)</label>
                             <input type="number" step="0.1" id="rainfall" name="rainfall" value="{{ latest_sensors.rainfall if latest_sensors else 100.0 }}" required>
                         </div>
+                    </div>
+
+                    <div class="form-group advisor-crop-select">
+                        <label for="advisor-crop-type">Crop in the leaf photo (required when attaching a photo)</label>
+                        <select id="advisor-crop-type" name="crop_type">
+                            <option value="">Select a crop if adding a photo</option>
+                            <option value="apple">Apple</option>
+                            <option value="cherry">Cherry</option>
+                            <option value="maize">Maize</option>
+                            <option value="grape">Grape</option>
+                            <option value="orange">Orange</option>
+                            <option value="peach">Peach</option>
+                            <option value="pepper">Bell pepper</option>
+                            <option value="potato">Potato</option>
+                            <option value="squash">Squash</option>
+                            <option value="strawberry">Strawberry</option>
+                            <option value="tomato">Tomato</option>
+                        </select>
+                        <small>The image model supports these crop classes. Paddy and other crops remain available in the regional crop catalogue, but need a crop-specific disease dataset first.</small>
                     </div>
 
                     <div class="image-upload-box" id="drop-zone-adv" style="margin-top: 1rem;">
@@ -172,6 +191,12 @@
 
         document.getElementById('advisor-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const attachedImage = document.getElementById('adv-image-input').files[0];
+            if (attachedImage && !document.getElementById('advisor-crop-type').value) {
+                alert('Choose the crop shown in the leaf photo before submitting it.');
+                document.getElementById('advisor-crop-type').focus();
+                return;
+            }
             const btn = document.getElementById('adv-btn');
             const spinner = document.getElementById('adv-spinner');
             const btnText = document.getElementById('adv-btn-text');

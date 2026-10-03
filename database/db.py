@@ -135,20 +135,29 @@ def verify_user_password(user, password):
 def save_sensor_reading(data):
     conn = get_db_connection()
     cursor = conn.cursor()
-    sm = str(data.get("soil_moisture", "Not Available"))
-    
+
+    def optional_float(key):
+        value = data.get(key)
+        if value is None or str(value).strip().lower() in {
+            "", "none", "null", "not available", "n/a"
+        }:
+            return None
+        return float(value)
+
+    sm_value = optional_float("soil_moisture")
+
     cursor.execute("""
     INSERT INTO sensor_readings (soil_moisture, temperature, humidity, ph, nitrogen, phosphorus, potassium, rainfall)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        sm,
-        float(data.get("temperature", 25.0)),
-        float(data.get("humidity", 70.0)),
-        float(data.get("ph", 6.5)),
-        float(data.get("nitrogen", 50.0)),
-        float(data.get("phosphorus", 50.0)),
-        float(data.get("potassium", 50.0)),
-        float(data.get("rainfall", 100.0))
+        str(sm_value) if sm_value is not None else None,
+        optional_float("temperature"),
+        optional_float("humidity"),
+        optional_float("ph"),
+        optional_float("nitrogen"),
+        optional_float("phosphorus"),
+        optional_float("potassium"),
+        optional_float("rainfall")
     ))
     reading_id = cursor.lastrowid
     conn.commit()
@@ -170,6 +179,28 @@ def get_sensor_history(limit=20):
     rows = cursor.fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
+
+def get_sensor_readings_since(days=7, limit=10000):
+    days = max(1, min(int(days), 30))
+    limit = max(1, min(int(limit), 20000))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT * FROM (
+            SELECT * FROM sensor_readings
+            WHERE datetime(timestamp) >= datetime('now', ?)
+            ORDER BY datetime(timestamp) DESC, id DESC
+            LIMIT ?
+        )
+        ORDER BY datetime(timestamp) ASC, id ASC
+        """,
+        (f"-{days} days", limit),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
 def save_analysis_result(analysis, user_id=None, image_path=None):
     conn = get_db_connection()

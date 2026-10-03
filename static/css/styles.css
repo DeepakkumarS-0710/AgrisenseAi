@@ -913,3 +913,394 @@ th {
 tr:hover td {
     background-color: rgba(255, 255, 255, 0.02);
 }
+
+/* Weekly soil monitoring */
+header {
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+header nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+}
+
+.monitoring-page {
+    max-width: 1420px;
+    padding-top: 1.7rem;
+}
+
+.monitor-hero {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.4rem;
+}
+
+.monitor-hero h1 {
+    margin: 0.2rem 0 0.35rem;
+    font-size: clamp(1.8rem, 3.3vw, 2.55rem);
+    letter-spacing: -0.045em;
+}
+
+.monitor-hero > div:first-child > p:last-child {
+    color: var(--text-muted);
+    max-width: 640px;
+    font-size: 0.9rem;
+}
+
+.monitor-hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.monitor-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #a8b8c7;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.monitor-live i {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #94a3b8;
+}
+
+.monitor-live.is-live i { background: #34d399; box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.12); }
+.monitor-live.is-stale i { background: #fbbf24; }
+.monitor-live.is-error i { background: #fb7185; }
+.monitor-refresh, .tn-crop-select {
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.monitor-refresh {
+    padding: 0.68rem 0.9rem;
+    border: 1px solid rgba(52, 211, 153, 0.38);
+    border-radius: 0.48rem;
+    background: rgba(16, 185, 129, 0.11);
+    color: #a7f3d0;
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.monitor-refresh:hover { transform: translateY(-1px); background: rgba(16, 185, 129, 0.2); }
+.monitor-refresh:disabled { opacity: 0.55; cursor: wait; }
+
+.monitor-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 0.9rem;
+}
+
+.monitor-summary-card, .monitor-panel {
+    border: 1px solid rgba(67, 108, 131, 0.35);
+    border-radius: 0.65rem;
+    background: linear-gradient(150deg, rgba(20, 49, 69, 0.96), rgba(13, 33, 52, 0.98));
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.13);
+}
+
+.monitor-summary-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 115px;
+    padding: 0.95rem 1rem;
+}
+
+.monitor-card-label, .monitor-overline {
+    color: #81a6b7;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+}
+
+.monitor-summary-card > strong {
+    display: block;
+    margin: 0.55rem 0 0.15rem;
+    color: #eaf5f6;
+    font-size: 1.2rem;
+    line-height: 1.25;
+}
+
+.monitor-summary-card > span:last-child { color: #8fa8b7; font-size: 0.68rem; }
+.monitor-condition-card { border-color: rgba(52, 211, 153, 0.35); }
+.monitor-condition-card > strong { color: #78e7ba; }
+
+.monitor-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+    gap: 0.9rem;
+    align-items: stretch;
+}
+
+.monitor-panel { padding: 1rem 1.1rem; }
+.monitor-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.7rem;
+}
+
+.monitor-panel-head > div:first-child { margin-right: auto; }
+.monitor-panel h2 { margin-top: 0.2rem; font-size: 1.05rem; }
+.monitor-select-label, .monitor-action-note, .monitor-unit-note { color: #82a2b2; font-size: 0.67rem; }
+.monitor-select {
+    min-width: 150px;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid rgba(82, 130, 151, 0.5);
+    border-radius: 0.42rem;
+    background: #0d263b;
+    color: #dff0ee;
+    font: inherit;
+    font-size: 0.72rem;
+}
+
+.monitor-select:focus-visible, .monitor-refresh:focus-visible, .tn-crop-select:focus-visible {
+    outline: 2px solid #74e1ba;
+    outline-offset: 2px;
+}
+
+.monitor-chart-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0 0.1rem;
+}
+
+.monitor-chart-heading > div { display: flex; flex-direction: column; }
+.monitor-chart-heading strong { color: #74e5ba; font-size: 1.4rem; }
+.monitor-chart-heading span { color: #8fa8b8; font-size: 0.68rem; }
+.monitor-chart-heading > span:last-child { padding-bottom: 0.3rem; }
+
+.monitor-chart-wrap {
+    position: relative;
+    min-height: 275px;
+    margin-top: 0.4rem;
+    border: 1px solid rgba(56, 100, 126, 0.3);
+    border-radius: 0.5rem;
+    background: rgba(4, 22, 39, 0.52);
+}
+
+#sensor-chart { display: block; width: 100%; height: 275px; overflow: visible; }
+.chart-gridline { stroke: rgba(128, 161, 176, 0.14); stroke-width: 1; }
+.chart-axis-label { fill: #7993a4; font-family: inherit; font-size: 10px; }
+.chart-line { fill: none; stroke: #43d7a7; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.chart-point { fill: #b5ffe1; stroke: #0b332f; stroke-width: 2; }
+.monitor-chart-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: #d4e4e9;
+    text-align: center;
+    padding: 1rem;
+}
+
+.monitor-chart-empty[hidden] { display: none; }
+.monitor-chart-empty > span { color: #43d7a7; font-size: 1.8rem; }
+.monitor-chart-empty strong { font-size: 0.83rem; }
+.monitor-chart-empty p, .monitor-chart-note { color: #8099aa; font-size: 0.67rem; }
+.monitor-chart-note { margin-top: 0.55rem; }
+
+.monitor-reading-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+}
+
+.monitor-reading-item {
+    min-width: 0;
+    padding: 0.65rem 0.7rem;
+    border: 1px solid rgba(69, 111, 134, 0.3);
+    border-radius: 0.42rem;
+    background: rgba(4, 24, 42, 0.56);
+}
+
+.monitor-reading-item span { display: block; color: #7f9aa9; font-size: 0.64rem; }
+.monitor-reading-item strong { display: block; margin-top: 0.25rem; color: #dcf3ea; font-size: 0.82rem; overflow-wrap: anywhere; }
+.monitor-reading-item small { display: block; margin-top: 0.2rem; color: #718b9b; font-size: 0.58rem; line-height: 1.35; }
+.monitor-reading-item strong.is-missing { color: #73899a; font-size: 0.7rem; font-weight: 500; }
+.monitor-actions-panel { margin-top: 0.9rem; }
+.monitor-actions-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.65rem; }
+.monitor-action-card {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.65rem;
+    align-items: start;
+    min-height: 90px;
+    padding: 0.8rem;
+    border: 1px solid rgba(66, 111, 133, 0.32);
+    border-radius: 0.48rem;
+    background: rgba(4, 23, 40, 0.58);
+}
+
+.monitor-action-card.priority-attention { border-left: 3px solid #f5b85a; }
+.monitor-action-card.priority-data { border-left: 3px solid #6bb8d1; }
+.monitor-action-card.priority-setup { border-left: 3px solid #6bb8d1; }
+.monitor-action-card.priority-steady { border-left: 3px solid #43cda0; }
+.monitor-action-index { color: #79b2b1; font-size: 0.7rem; font-weight: 800; }
+.monitor-action-card strong { color: #e0eeef; font-size: 0.78rem; }
+.monitor-action-card p { margin-top: 0.25rem; color: #9bb2be; font-size: 0.7rem; line-height: 1.5; }
+.monitor-loading { color: #8099aa; font-size: 0.76rem; padding: 0.8rem 0; }
+.monitor-connection {
+    margin-top: 0.9rem;
+    border: 1px solid rgba(67, 108, 131, 0.35);
+    border-radius: 0.55rem;
+    background: rgba(13, 33, 52, 0.72);
+}
+
+.monitor-connection summary { padding: 0.85rem 1rem; color: #b4e4d6; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.monitor-connection > div { padding: 0 1rem 0.9rem; color: #91a9b8; font-size: 0.71rem; line-height: 1.55; }
+.monitor-connection p + p { margin-top: 0.4rem; }
+.monitor-connection code { color: #74e5ba; }
+.monitor-disclaimer { max-width: 1100px; margin: 0.8rem 0 1.2rem; color: #738b9c; font-size: 0.66rem; line-height: 1.55; }
+.disease-crop-label { display: block; margin: 0.9rem 0 0.35rem; color: #c8d9e1; font-size: 0.74rem; font-weight: 700; }
+.disease-crop-select {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid rgba(82, 130, 151, 0.5);
+    border-radius: 0.42rem;
+    background: #0d263b;
+    color: #e4f1f2;
+    font: inherit;
+    font-size: 0.76rem;
+}
+.disease-crop-select:focus-visible { outline: 2px solid #74e1ba; outline-offset: 2px; }
+.crop-support-note { margin-top: 0.45rem; font-size: 0.7rem !important; }
+.advisor-crop-select { margin-top: 0.8rem; }
+.advisor-crop-select select {
+    width: 100%;
+    padding: 0.68rem 0.75rem;
+    border: 1px solid var(--card-border);
+    border-radius: 0.5rem;
+    background: #0f172a;
+    color: var(--text-main);
+    font: inherit;
+}
+.advisor-crop-select select:focus-visible { outline: 2px solid #74e1ba; outline-offset: 2px; }
+.advisor-crop-select small { color: #8099aa; font-size: 0.68rem; line-height: 1.5; }
+
+.farm-dashboard { max-width: 1420px; padding-top: 1.6rem; }
+.farm-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.farm-welcome h1 { margin: 0.2rem 0 0.35rem; font-size: clamp(1.9rem, 3.4vw, 2.6rem); letter-spacing: -0.045em; }
+.farm-welcome p:last-child { color: var(--text-muted); font-size: 0.88rem; }
+.farm-primary-action {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(52, 211, 153, 0.38);
+    border-radius: 0.45rem;
+    background: rgba(16, 185, 129, 0.14);
+    color: #a7f3d0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+.farm-primary-action:hover { transform: translateY(-1px); background: rgba(16, 185, 129, 0.23); }
+.dashboard-section { margin-bottom: 1.35rem; }
+.dashboard-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin-bottom: 0.7rem; }
+.dashboard-section-heading h2 { margin-top: 0.2rem; font-size: 1.08rem; }
+.dashboard-sync-status { color: #9cb3bf; font-size: 0.68rem; }
+.dashboard-sync-status.is-live { color: #6ee7b7; }
+.dashboard-sync-status.is-stale { color: #fbbf24; }
+.dashboard-sync-status.is-waiting { color: #93a4b3; }
+.dashboard-sensor-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.65rem; }
+.dashboard-sensor-card {
+    min-width: 0;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid rgba(67, 108, 131, 0.35);
+    border-radius: 0.55rem;
+    background: linear-gradient(145deg, rgba(20, 49, 69, 0.92), rgba(13, 33, 52, 0.98));
+}
+.dashboard-sensor-top { display: flex; align-items: center; gap: 0.45rem; color: #88a6b5; font-size: 0.68rem; }
+.dashboard-sensor-icon { color: #5cddae; font-size: 0.9rem; }
+.dashboard-sensor-card > strong { display: block; margin-top: 0.45rem; color: #e8f4f0; font-size: 1.2rem; overflow-wrap: anywhere; }
+.dashboard-sensor-card > small { display: block; margin-top: 0.15rem; color: #6f8998; font-size: 0.62rem; }
+.dashboard-reading-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.55rem; color: #7892a0; font-size: 0.65rem; }
+.dashboard-reading-foot a { color: #75e0b9; text-decoration: none; font-weight: 700; }
+.farm-tools-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
+.farm-tool-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 205px;
+    padding: 0.95rem;
+    border: 1px solid rgba(67, 108, 131, 0.35);
+    border-radius: 0.58rem;
+    background: linear-gradient(150deg, rgba(20, 49, 69, 0.88), rgba(13, 33, 52, 0.98));
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.farm-tool-card:hover { transform: translateY(-3px); border-color: rgba(67, 217, 167, 0.6); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18); }
+.farm-tool-card.tool-monitor { background: linear-gradient(145deg, rgba(13, 77, 62, 0.85), rgba(13, 38, 55, 0.98)); }
+.farm-tool-icon { margin-bottom: 0.65rem; color: #77e4bc; font-size: 1.35rem; }
+.farm-tool-kicker { color: #7c9eae; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.75px; }
+.farm-tool-card strong { margin-top: 0.22rem; font-size: 0.94rem; }
+.farm-tool-card p { margin-top: 0.45rem; color: #8fa9b6; font-size: 0.69rem; line-height: 1.5; }
+.farm-tool-link { margin-top: auto; padding-top: 0.8rem; color: #71e1b8; font-size: 0.68rem; font-weight: 700; }
+.dashboard-history { margin-top: 0.8rem; }
+.dashboard-history-title { justify-content: space-between; margin-bottom: 0.3rem; }
+.dashboard-history-title a { color: #72e2b8; font-size: 0.7rem; text-decoration: none; }
+.dashboard-crop-name { color: #81e9bc; font-weight: 700; }
+.dashboard-empty-row { text-align: center; color: var(--text-muted); padding: 1.5rem; }
+
+@media (max-width: 1020px) {
+    .monitor-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .monitor-grid { grid-template-columns: 1fr; }
+    .farm-tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-sensor-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+    header { align-items: flex-start; padding: 1rem; }
+    header nav { width: 100%; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.25rem; }
+    header nav .nav-link { flex: 0 0 auto; padding: 0.45rem 0.65rem; white-space: nowrap; font-size: 0.8rem; }
+    .monitor-hero { align-items: flex-start; flex-direction: column; }
+    .monitor-hero-actions { justify-content: flex-start; }
+    .monitoring-page { padding: 1.2rem 1rem; }
+    .farm-welcome { align-items: flex-start; flex-direction: column; }
+    .farm-dashboard { padding: 1.2rem 1rem; }
+}
+
+@media (max-width: 500px) {
+    .monitor-summary-grid { gap: 0.55rem; }
+    .monitor-summary-card { min-height: 105px; padding: 0.75rem; }
+    .monitor-summary-card > strong { font-size: 1rem; }
+    .monitor-panel { padding: 0.85rem; }
+    .monitor-unit-note { width: 100%; }
+    .monitor-select-label { margin-left: 0; }
+    .monitor-select { flex: 1; }
+    .monitor-chart-wrap, #sensor-chart { min-height: 240px; height: 240px; }
+    .monitor-reading-grid { gap: 0.4rem; }
+    .monitor-reading-item { padding: 0.55rem; }
+    .farm-tools-grid { grid-template-columns: 1fr; }
+    .dashboard-sensor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-reading-foot { align-items: flex-start; flex-direction: column; }
+}

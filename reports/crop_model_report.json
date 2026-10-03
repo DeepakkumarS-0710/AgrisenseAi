@@ -1,0 +1,68 @@
+{
+  "model": "Random Forest",
+  "dataset": "C:\\Users\\Deepak\\OneDrive\\Desktop\\Agrisense_AI_new - Copy\\agrisense (3)\\agrisense\\final_data\\data\\crop_recommendation\\Crop_recommendation.csv",
+  "classes": [
+    "apple",
+    "banana",
+    "blackgram",
+    "chickpea",
+    "coconut",
+    "coffee",
+    "cotton",
+    "grapes",
+    "jute",
+    "kidneybeans",
+    "lentil",
+    "maize",
+    "mango",
+    "mothbeans",
+    "mungbean",
+    "muskmelon",
+    "orange",
+    "papaya",
+    "pigeonpeas",
+    "pomegranate",
+    "rice",
+    "watermelon"
+  ],
+  "metrics": {
+    "accuracy": 99.32,
+    "macro_f1": 99.32,
+    "log_loss": 0.0315,
+    "train_rows": 1760,
+    "test_rows": 440,
+    "cross_validation": {
+      "Random Forest": {
+        "fold_macro_f1": [
+          1.0,
+          0.9972,
+          0.9856,
+          0.9886,
+          1.0
+        ],
+        "mean_macro_f1": 0.9943
+      },
+      "Extra Trees": {
+        "fold_macro_f1": [
+          1.0,
+          0.9943,
+          0.9798,
+          0.9886,
+          0.9972
+        ],
+        "mean_macro_f1": 0.992
+      },
+      "Histogram Gradient Boosting": {
+        "fold_macro_f1": [
+          0.9942,
+          0.9915,
+          0.9972,
+          0.9943,
+          0.9886
+        ],
+        "mean_macro_f1": 0.9932
+      }
+    }
+  },
+  "note": "Holdout score is from a small public crop recommendation dataset; it does not measure farm yield or district-level Tamil Nadu suitability."
+}

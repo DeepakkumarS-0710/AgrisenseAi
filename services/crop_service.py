@@ -76,31 +76,25 @@ def build_field_guidance(
     # Nutrient condition
     # --------------------------------------------------------
 
-    if N < 30:
-        nitrogen_status = "Low"
-    else:
-        nitrogen_status = "Adequate"
-
-    if P < 20:
-        phosphorus_status = "Low"
-    else:
-        phosphorus_status = "Adequate"
-
-    if K < 20:
-        potassium_status = "Low"
-    else:
-        potassium_status = "Adequate"
+    # The incoming sensor's units and crop stage are not known here, so do not
+    # label a nutrient "low" or "adequate" from a universal threshold.
+    nitrogen_status = "Reading recorded"
+    phosphorus_status = "Reading recorded"
+    potassium_status = "Reading recorded"
 
     # --------------------------------------------------------
     # Irrigation suggestion
     # --------------------------------------------------------
 
-    if rainfall < 500:
-        irrigation = "Higher irrigation may be required."
+    if rainfall < 100:
+        rainfall_status = "Very low"
     elif rainfall > 1500:
-        irrigation = "Reduce irrigation and monitor soil waterlogging."
-    else:
-        irrigation = "Moderate irrigation may be appropriate."
+        rainfall_status = "Very high"
+
+    irrigation = (
+        "Use crop stage, root-zone soil moisture and the local rainfall forecast "
+        "to decide irrigation. Rainfall alone is not enough to set a watering schedule."
+    )
 
     # --------------------------------------------------------
     # Moisture / disease risk
@@ -111,9 +105,9 @@ def build_field_guidance(
         or rainfall >= 1500
         or (temperature >= 28 and humidity >= 75)
     ):
-        disease_risk = "Moderate"
+        disease_risk = "Weather conditions may favour some diseases"
     else:
-        disease_risk = "Low"
+        disease_risk = "No broad weather warning"
 
     # --------------------------------------------------------
     # Crop-specific advice
@@ -122,7 +116,9 @@ def build_field_guidance(
     crop_advice = {
         "rice": "Maintain adequate water availability and monitor nitrogen levels.",
         "maize": "Monitor nitrogen and potassium and maintain adequate soil moisture.",
-        "wheat": "Maintain balanced nutrients and avoid excessive irrigation.",
+        "blackgram": "Check the local sowing window and scout for pests during early growth.",
+        "mungbean": "Check the local sowing window and maintain drainage after heavy rain.",
+        "pigeonpeas": "Use a locally recommended variety and monitor crop and soil moisture.",
         "cotton": "Monitor soil moisture and maintain balanced nutrient levels.",
         "potato": "Avoid waterlogging and maintain suitable soil moisture.",
         "tomato": "Maintain balanced nutrients and monitor humidity-related disease risk.",
@@ -147,7 +143,7 @@ def build_field_guidance(
     if planned_crop:
         planned_crop_message = (
             f"Planned crop: {planned_crop}. "
-            f"Compare this crop with the ML recommendation before planting."
+            f"Compare this plan with the model output and district-specific advice before planting."
         )
     else:
         planned_crop_message = "No planned crop was specified."
@@ -211,6 +207,10 @@ class CropService:
         self.model = None
         self.label_encoder = None
         self.feature_names = None
+        self.crop_profiles = {}
+        self.feature_ranges = {}
+        self.model_name = "Crop classifier"
+        self.source_rows = None
 
         self._load_model()
 
@@ -262,6 +262,10 @@ class CropService:
             self.label_encoder = data["label_encoder"]
 
             self.feature_names = data["feature_names"]
+            self.crop_profiles = data.get("crop_profiles", {})
+            self.feature_ranges = data.get("feature_ranges", {})
+            self.model_name = data.get("model_name", self.model_name)
+            self.source_rows = data.get("source_rows")
 
 
     # ========================================================
@@ -335,6 +339,7 @@ class CropService:
         # ====================================================
 
         probs = self.model.predict_proba(features_df)[0]
+        class_ids = list(getattr(self.model, "classes_", range(len(probs))))
 
 
         # ----------------------------------------------------
@@ -350,11 +355,12 @@ class CropService:
         # Convert class number to crop name
         # ----------------------------------------------------
 
-        recommended_crop = str(
+        recommended_label = str(
             self.label_encoder.inverse_transform(
-                [top_idx]
+                [int(class_ids[top_idx])]
             )[0]
         )
+        recommended_crop = self._display_crop_name(recommended_label)
 
 
         # ====================================================
@@ -368,11 +374,12 @@ class CropService:
 
         for index in ranked_indices:
 
-            crop_name = str(
+            crop_label = str(
                 self.label_encoder.inverse_transform(
-                    [int(index)]
+                    [int(class_ids[index])]
                 )[0]
             )
+            crop_name = self._display_crop_name(crop_label)
 
             crop_confidence = round(
                 float(probs[index]) * 100,
@@ -382,6 +389,7 @@ class CropService:
             crop_options.append(
                 {
                     "crop": crop_name,
+                    "model_label": crop_label,
 
                     # Clear name:
                     "model_confidence": crop_confidence
@@ -434,6 +442,42 @@ class CropService:
             planned_crop=planned_crop
         )
 
+        ranked_probabilities = np.sort(probs)[::-1]
+        margin = float(ranked_probabilities[0] - ranked_probabilities[1]) if len(ranked_probabilities) > 1 else float(ranked_probabilities[0])
+        out_of_range = []
+        feature_values = {
+            "N": N, "P": P, "K": K,
+            "temperature": temperature, "humidity": humidity,
+            "ph": ph, "rainfall": rainfall,
+        }
+        for name, value in feature_values.items():
+            observed = self.feature_ranges.get(name)
+            if observed and not observed.get("p01", value) <= value <= observed.get("p99", value):
+                out_of_range.append(name)
+
+        if out_of_range:
+            recommendation_signal = "Cautious — outside the training data range"
+        elif confidence >= 0.55 and margin >= 0.20:
+            recommendation_signal = "Clear model preference"
+        elif confidence >= 0.30 and margin >= 0.08:
+            recommendation_signal = "Moderate model preference"
+        else:
+            recommendation_signal = "Close call — compare the alternatives"
+
+        profile_matches = []
+        profile = self.crop_profiles.get(recommended_label, {})
+        for name, value in feature_values.items():
+            band = profile.get(name)
+            if band and band.get("p10", value) <= value <= band.get("p90", value):
+                profile_matches.append(name)
+
+        evidence = (
+            "This class was the closest match to the seven input values in the model's labeled crop examples."
+        )
+        if profile_matches:
+            evidence += " Inputs within the observed range for this class: " + ", ".join(profile_matches) + "."
+        evidence += " Similarity to training examples is not a yield or planting-success forecast."
+
 
         # ====================================================
         # CLEAR PREDICTION RESULT
@@ -446,6 +490,7 @@ class CropService:
             # -----------------------------------------------
 
             "recommended_crop": recommended_crop,
+            "recommended_crop_label": recommended_label,
 
 
             # -----------------------------------------------
@@ -465,6 +510,12 @@ class CropService:
                 confidence * 100,
                 2
             ),
+            "recommendation_signal": recommendation_signal,
+            "input_outside_training_range": out_of_range,
+            "recommendation_evidence": evidence,
+            "model_name": self.model_name,
+            "model_class_count": len(self.label_encoder.classes_),
+            "training_examples": self.source_rows,
 
 
             # -----------------------------------------------
@@ -487,6 +538,20 @@ class CropService:
 
             "field_guidance": field_guidance
         }
+
+    @staticmethod
+    def _display_crop_name(label):
+        known_names = {
+            "blackgram": "Black gram",
+            "mungbean": "Green gram",
+            "pigeonpeas": "Pigeon pea",
+            "kidneybeans": "Kidney beans",
+            "mothbeans": "Moth beans",
+            "grapes": "Grapes",
+            "muskmelon": "Muskmelon",
+            "rice": "Paddy (rice)",
+        }
+        return known_names.get(label.lower(), label.replace("_", " ").title())
 
 
 # ============================================================

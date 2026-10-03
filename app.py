@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import math
+import uuid
 from functools import wraps
 import werkzeug.utils
 
@@ -39,6 +41,7 @@ from database.db import (
     save_sensor_reading,
     get_latest_sensor_reading,
     get_sensor_history,
+    get_sensor_readings_since,
     save_analysis_result,
     get_analysis_history
 )
@@ -49,7 +52,9 @@ from database.db import (
 # ============================================================
 
 from services.crop_service import predict_crop
+from services.tamil_nadu_crop_catalog import get_tamil_nadu_crop_catalog
 from services.disease_service import predict_disease
+from services.monitoring_service import analyze_soil_week
 from services.analysis_service import run_multimodal_analysis
 from rag.retriever import retrieve_knowledge
 from services.llm_service import build_disease_management
@@ -384,6 +389,12 @@ def dashboard_page():
     )
 
 
+@app.route("/soil-monitoring")
+@login_required
+def soil_monitoring_page():
+    return render_template("soil_monitoring.html")
+
+
 @app.route("/crop-analysis")
 @login_required
 def crop_analysis_page():
@@ -392,7 +403,8 @@ def crop_analysis_page():
 
     return render_template(
         "crop_analysis.html",
-        latest_sensors=latest_sensors
+        latest_sensors=latest_sensors,
+        tamil_nadu_crops=get_tamil_nadu_crop_catalog()
     )
 
 
@@ -570,6 +582,7 @@ def analyze():
         # ====================================================
 
         image_path = None
+        crop_hint = str(data.get("crop_type", "")).strip()
 
 
         if "image" in request.files:
@@ -578,6 +591,12 @@ def analyze():
 
 
             if file and file.filename != "":
+
+                if not crop_hint:
+                    return jsonify({
+                        "status": "error",
+                        "message": "Choose the crop before submitting a leaf photo so the model checks the right disease classes."
+                    }), 400
 
                 if not allowed_file(
                     file.filename
@@ -591,9 +610,10 @@ def analyze():
                     }), 400
 
 
-                filename = werkzeug.utils.secure_filename(
-                    file.filename
-                )
+                file_extension = os.path.splitext(
+                    werkzeug.utils.secure_filename(file.filename)
+                )[1].lower()
+                filename = uuid.uuid4().hex + file_extension
 
 
                 save_path = os.path.join(
@@ -666,7 +686,9 @@ def analyze():
 
             rainfall=rainfall,
 
-            image_path=image_path
+            image_path=image_path,
+
+            crop_hint=crop_hint or None
         )
 
 
@@ -743,61 +765,44 @@ def api_predict_crop():
             else request.form.to_dict()
         )
 
+        ranges = {
+            "nitrogen": (0, 300),
+            "phosphorus": (0, 300),
+            "potassium": (0, 300),
+            "temperature": (0, 60),
+            "humidity": (0, 100),
+            "ph": (0, 14),
+            "rainfall": (0, 5000),
+        }
+        values = {}
+        for key, (minimum, maximum) in ranges.items():
+            try:
+                value = float(data.get(key, ""))
+            except (AttributeError, TypeError, ValueError):
+                return jsonify({
+                    "status": "error",
+                    "message": f"Enter a valid {key.replace('_', ' ')} value."
+                }), 400
+            if not math.isfinite(value) or not minimum <= value <= maximum:
+                return jsonify({
+                    "status": "error",
+                    "message": f"{key.replace('_', ' ').capitalize()} must be between {minimum} and {maximum}."
+                }), 400
+            values[key] = value
+
 
         # ----------------------------------------------------
         # PREDICT CROP
         # ----------------------------------------------------
 
         res = predict_crop(
-
-            N=float(
-                data.get(
-                    "nitrogen",
-                    50
-                )
-            ),
-
-            P=float(
-                data.get(
-                    "phosphorus",
-                    50
-                )
-            ),
-
-            K=float(
-                data.get(
-                    "potassium",
-                    50
-                )
-            ),
-
-            temperature=float(
-                data.get(
-                    "temperature",
-                    25
-                )
-            ),
-
-            humidity=float(
-                data.get(
-                    "humidity",
-                    70
-                )
-            ),
-
-            ph=float(
-                data.get(
-                    "ph",
-                    6.5
-                )
-            ),
-
-            rainfall=float(
-                data.get(
-                    "rainfall",
-                    100
-                )
-            ),
+            N=values["nitrogen"],
+            P=values["phosphorus"],
+            K=values["potassium"],
+            temperature=values["temperature"],
+            humidity=values["humidity"],
+            ph=values["ph"],
+            rainfall=values["rainfall"],
 
             planned_crop=data.get(
                 "planned_crop"
@@ -873,6 +878,14 @@ def api_detect_disease():
             }), 400
 
 
+        crop_type = request.form.get("crop_type", "").strip()
+        if not crop_type:
+            return jsonify({
+                "status": "error",
+                "message": "Choose the crop before uploading the leaf image."
+            }), 400
+
+
         if not allowed_file(
             file.filename
         ):
@@ -891,9 +904,10 @@ def api_detect_disease():
         # SAVE IMAGE
         # ----------------------------------------------------
 
-        filename = werkzeug.utils.secure_filename(
-            file.filename
-        )
+        file_extension = os.path.splitext(
+            werkzeug.utils.secure_filename(file.filename)
+        )[1].lower()
+        filename = uuid.uuid4().hex + file_extension
 
 
         save_path = os.path.join(
@@ -912,7 +926,8 @@ def api_detect_disease():
         # ----------------------------------------------------
 
         res = predict_disease(
-            save_path
+            save_path,
+            crop_hint=crop_type
         )
 
 
@@ -941,6 +956,28 @@ def api_detect_disease():
             res,
             rag_sources
         )
+
+        grounded_sources = (res["management"] or {}).get("sources", [])
+        if res.get("health_status") in {"Unsupported crop", "Invalid Image"}:
+            grounded_sources = []
+
+        if res.get("reliability") != "High":
+            res["management"] = {
+                "title": "Confirm the image result first",
+                "status": "Needs confirmation",
+                "summary": res.get("interpretation", "The image result is uncertain."),
+                "treatment": [
+                    "Photograph several affected leaves and a healthy leaf in daylight.",
+                    "Ask your local KVK or agricultural extension officer to confirm the symptoms before treatment."
+                ],
+                "prevention": [
+                    "Avoid moving between wet plants and clean tools after handling affected leaves.",
+                    "Do not apply pesticides or remove whole plants based only on this image score."
+                ],
+                "monitoring": "Check nearby plants over the next few days and note whether symptoms are spreading.",
+                "grounding": "The image match needs confirmation. Sources below relate to the model's tentative label; disease-specific treatment is held until the match is stronger.",
+                "sources": grounded_sources
+            }
 
 
         return jsonify({
@@ -975,12 +1012,12 @@ def post_iot_sensors():
 
     try:
 
-        data = request.get_json(
+        raw_data = request.get_json(
             force=True
         )
 
 
-        if not data:
+        if not raw_data:
 
             return jsonify({
 
@@ -989,6 +1026,63 @@ def post_iot_sensors():
                 "message":
                     "Invalid JSON body"
 
+            }), 400
+
+        if not isinstance(raw_data, dict):
+            return jsonify({
+                "status": "error",
+                "message": "Sensor readings must be sent as a JSON object."
+            }), 400
+
+        aliases = {
+            "n": "nitrogen",
+            "p": "phosphorus",
+            "k": "potassium",
+            "ph": "ph",
+            "soilmoisture": "soil_moisture",
+            "air_temperature": "temperature",
+            "air_humidity": "humidity",
+            "rain": "rainfall",
+        }
+        data = {}
+        for key, value in raw_data.items():
+            normalized = str(key).strip().lower()
+            data[aliases.get(normalized, normalized)] = value
+
+
+        sensor_bounds = {
+            "soil_moisture": (0, 100),
+            "temperature": (-10, 70),
+            "humidity": (0, 100),
+            "ph": (0, 14),
+            "nitrogen": (0, 1000),
+            "phosphorus": (0, 1000),
+            "potassium": (0, 1000),
+            "rainfall": (0, 5000),
+        }
+        received = 0
+        for key, (minimum, maximum) in sensor_bounds.items():
+            value = data.get(key)
+            if value is None or str(value).strip() == "":
+                continue
+            try:
+                numeric_value = float(value)
+            except (TypeError, ValueError):
+                return jsonify({
+                    "status": "error",
+                    "message": f"{key.replace('_', ' ').capitalize()} must be a number."
+                }), 400
+            if not minimum <= numeric_value <= maximum:
+                return jsonify({
+                    "status": "error",
+                    "message": f"{key.replace('_', ' ').capitalize()} is outside the supported range."
+                }), 400
+            received += 1
+
+        if received == 0:
+            return jsonify({
+                "status": "error",
+                "message": "Include at least one supported sensor value."
             }), 400
 
 
@@ -1076,6 +1170,16 @@ def get_sensors_history_api():
 
         "data": history
 
+    })
+
+
+@app.route("/api/sensors/week", methods=["GET"])
+@login_required
+def get_weekly_sensor_summary_api():
+    readings = get_sensor_readings_since(days=7, limit=10000)
+    return jsonify({
+        "status": "success",
+        "data": analyze_soil_week(readings),
     })
 
 

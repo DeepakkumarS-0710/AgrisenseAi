@@ -9,7 +9,7 @@
 <body>
     <header>
         <div class="logo-area"><span class="logo-icon">🌱</span><div><div class="logo-title">AGriSense</div><div class="logo-subtitle">Smart Agriculture Intelligence</div></div></div>
-        <nav><a href="/dashboard" class="nav-link">Dashboard</a><a href="/crop-analysis" class="nav-link">Crop Analysis</a><a href="/disease-detection" class="nav-link active">Disease Detection</a><a href="/advisor" class="nav-link">AI Advisor</a><a href="/history" class="nav-link">History</a><a href="/about" class="nav-link">About</a><a href="/logout" class="nav-link logout-link">Logout</a></nav>
+        <nav><a href="/dashboard" class="nav-link">Dashboard</a><a href="/soil-monitoring" class="nav-link">Soil Monitor</a><a href="/crop-analysis" class="nav-link">Crop Analysis</a><a href="/disease-detection" class="nav-link active">Disease Detection</a><a href="/advisor" class="nav-link">AI Advisor</a><a href="/history" class="nav-link">History</a><a href="/logout" class="nav-link logout-link">Logout</a></nav>
     </header>
 
     <main class="disease-page">
@@ -18,35 +18,73 @@
             <section class="disease-panel upload-panel">
                 <div class="disease-panel-heading"><div><span class="disease-icon">▧</span><strong>Input Image</strong></div><span class="panel-kicker">PNG, JPG, WEBP</span></div>
                 <p class="panel-description">Use a well-lit image with the affected leaf filling most of the frame.</p>
-                <form id="disease-form" enctype="multipart/form-data"><div class="disease-upload-box" id="drop-zone-d"><input type="file" id="disease-image-input" name="image" accept="image/*" required><div id="upload-placeholder-d"><div class="upload-mark">↑</div><strong>Drop leaf image here</strong><span>or click to browse from your device</span></div><img id="image-preview-d" alt="Selected leaf preview"></div><div class="selected-file" id="selected-file">No image selected</div><button type="submit" class="disease-primary-btn" id="disease-btn"><span class="spinner" id="disease-spinner"></span><span id="disease-btn-text">Analyze Leaf</span></button></form>
+                <label class="disease-crop-label" for="disease-crop-type">What crop is this leaf from?</label>
+                <select id="disease-crop-type" class="disease-crop-select" required>
+                    <option value="">Choose a crop</option>
+                    <optgroup label="Disease classes available">
+                        <option value="apple">Apple</option>
+                        <option value="cherry">Cherry</option>
+                        <option value="maize">Maize</option>
+                        <option value="grape">Grape</option>
+                        <option value="orange">Orange / citrus</option>
+                        <option value="peach">Peach</option>
+                        <option value="pepper_bell">Bell pepper / capsicum</option>
+                        <option value="potato">Potato</option>
+                        <option value="squash">Squash</option>
+                        <option value="strawberry">Strawberry</option>
+                        <option value="tomato">Tomato</option>
+                    </optgroup>
+                    <optgroup label="No disease classes in the current model">
+                        <option value="rice">Paddy / rice</option>
+                        <option value="groundnut">Groundnut</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="millet">Millets</option>
+                        <option value="banana">Banana</option>
+                        <option value="coconut">Coconut</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="other">Another crop</option>
+                    </optgroup>
+                </select>
+                <p class="panel-description crop-support-note">The model only reports diseases for the first group. For paddy and other regional crops it will explain that coverage is missing instead of guessing another crop's disease.</p>
+                <form id="disease-form" enctype="multipart/form-data"><div class="disease-upload-box" id="drop-zone-d"><input type="file" id="disease-image-input" name="image" accept=".png,.jpg,.jpeg,.webp" required><div id="upload-placeholder-d"><div class="upload-mark">↑</div><strong>Drop leaf image here</strong><span>or click to browse from your device</span></div><img id="image-preview-d" alt="Selected leaf preview"></div><div class="selected-file" id="selected-file">No image selected</div><button type="submit" class="disease-primary-btn" id="disease-btn"><span class="spinner" id="disease-spinner"></span><span id="disease-btn-text">Analyze Leaf</span></button></form>
             </section>
 
             <section class="disease-panel diagnosis-panel">
                 <div class="disease-panel-heading"><div><span class="disease-icon">◇</span><strong>Detection Result</strong></div><span class="status-badge unavailable" id="d-reliability">Pending</span></div>
-                <p class="panel-description">The model result and confidence appear after image analysis.</p>
-                <div class="diagnosis-hero"><div class="diagnosis-thumb"><img id="result-image" alt="Analyzed leaf"></div><div class="diagnosis-name"><span id="d-health-status">Awaiting image</span><h2 id="d-disease-name">Upload a leaf to begin</h2><small id="d-crop-name">Crop not identified</small></div><div class="diagnosis-confidence"><span id="d-confidence">--%</span><small>Confidence</small></div></div>
+                <p class="panel-description">Scores show the closest supported class. They are not a confirmed diagnosis, especially for unfamiliar crops or field photos.</p>
+                <div class="diagnosis-hero"><div class="diagnosis-thumb"><img id="result-image" alt="Analyzed leaf"></div><div class="diagnosis-name"><span id="d-health-status">Awaiting image</span><h2 id="d-disease-name">Upload a leaf to begin</h2><small id="d-crop-name">Crop not identified</small></div><div class="diagnosis-confidence"><span id="d-confidence">--%</span><small>Model score</small></div></div>
                 <div class="diagnosis-facts"><div><small>Disease type</small><strong id="disease-type">--</strong></div><div><small>Affected part</small><strong id="affected-part">Leaf</strong></div><div><small>Risk status</small><strong id="disease-risk">Pending</strong></div></div>
                 <div class="why-card"><strong>Why this prediction?</strong><p id="d-summary">Upload an image and the detection explanation will appear here.</p></div>
                 <div class="details-card"><strong>Disease details</strong><div class="detail-row"><span>Scientific / class label</span><b id="d-raw-class">--</b></div><div class="detail-row"><span>Model reliability</span><b id="d-reliability-detail">--</b></div></div>
             </section>
 
             <section class="disease-panel actions-panel">
-                <div class="disease-panel-heading"><div><span class="disease-icon">✦</span><strong>Recommended Actions</strong></div></div><p class="panel-description">Follow these steps to control the disease and protect nearby plants.</p>
+                <div class="disease-panel-heading"><div><span class="disease-icon">✦</span><strong>Recommended Actions</strong></div></div><p class="panel-description">Check the reliability note first. Disease-specific steps appear only when the image match is strong; uncertain results ask you to confirm before treatment.</p>
                 <div id="action-list" class="action-list"><div class="empty-actions">Actions will appear after diagnosis.</div></div>
                 <div class="pro-tip"><span>!</span><div><strong>Pro tip</strong><p id="d-monitoring">Early action is usually more effective. Confirm chemical choices with your local agricultural extension service.</p></div></div>
             </section>
         </div>
 
-        <section class="disease-bottom-grid"><div class="disease-panel rag-grounding-panel"><div class="disease-panel-heading"><div><span class="disease-icon">⌁</span><strong>Disease Treatment &amp; Management RAG Grounding</strong></div><span class="source-count" id="source-count">0 sources</span></div><p class="panel-description">Treatment guidance is grounded in the agricultural reference documents retrieved for this diagnosis.</p><div id="d-rag-sources" class="source-list"><div class="empty-actions">Retrieved treatment sources will appear here.</div></div></div><div class="disease-panel predictions-panel"><div class="disease-panel-heading"><div><span class="disease-icon">≋</span><strong>Model alternatives</strong></div></div><p class="panel-description">Other classes considered by the vision model.</p><div id="top5-container" class="prediction-list"><div class="empty-actions">Alternative predictions will appear here.</div></div></div></section>
+        <section class="disease-bottom-grid"><div class="disease-panel rag-grounding-panel"><div class="disease-panel-heading"><div><span class="disease-icon">⌁</span><strong>Disease Treatment &amp; Management RAG Grounding</strong></div><span class="source-count" id="source-count">0 sources</span></div><p class="panel-description">References are shown for the model's current label. If the match needs confirmation, treat them as background and confirm the disease before treatment.</p><div id="d-rag-sources" class="source-list"><div class="empty-actions">Retrieved treatment sources will appear here.</div></div></div><div class="disease-panel predictions-panel"><div class="disease-panel-heading"><div><span class="disease-icon">≋</span><strong>Model alternatives</strong></div></div><p class="panel-description">Other classes considered by the vision model.</p><div id="top5-container" class="prediction-list"><div class="empty-actions">Alternative predictions will appear here.</div></div></div></section>
     </main>
 
     <script>
 const form = document.getElementById('disease-form');
 const input = document.getElementById('disease-image-input');
+const cropInput = document.getElementById('disease-crop-type');
 const dropZone = document.getElementById('drop-zone-d');
 const preview = document.getElementById('image-preview-d');
 const placeholder = document.getElementById('upload-placeholder-d');
 const fileLabel = document.getElementById('selected-file');
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 function isImageFile(file) {
     if (!file) return false;
@@ -200,6 +238,12 @@ form.addEventListener("submit", async function(event) {
         return;
     }
 
+    if (!cropInput.value) {
+        alert("Choose the crop first so the model can use the right disease classes.");
+        cropInput.focus();
+        return;
+    }
+
     const file = input.files[0];
 
     if (!isImageFile(file)) {
@@ -226,6 +270,7 @@ form.addEventListener("submit", async function(event) {
         // IMPORTANT:
         // Flask expects request.files['image']
         formData.append("image", file);
+        formData.append("crop_type", cropInput.value);
 
         console.log("Sending image:", file.name);
         console.log("Image size:", file.size);
@@ -280,15 +325,17 @@ form.addEventListener("submit", async function(event) {
             `${data.confidence || 0}%`;
 
         document.getElementById("disease-type").textContent =
-            data.disease &&
-            data.disease.toLowerCase().includes("healthy")
+            data.health_status === "Healthy"
                 ? "Healthy tissue"
-                : "Disease pattern";
+                : data.health_status === "Diseased"
+                    ? "Disease pattern"
+                    : "No diagnosis";
 
         document.getElementById("disease-risk").textContent =
             management.status || "Review";
 
         document.getElementById("d-summary").textContent =
+            data.interpretation ||
             management.summary ||
             "The model completed the image analysis.";
 
@@ -315,6 +362,10 @@ form.addEventListener("submit", async function(event) {
         } else if (data.reliability === "Low") {
 
             badge.className = "status-badge critical";
+
+        } else if (data.reliability === "Unavailable" || data.reliability === "Invalid Image") {
+
+            badge.className = "status-badge unavailable";
 
         } else {
 
@@ -355,7 +406,7 @@ form.addEventListener("submit", async function(event) {
 
                             <div>
                                 <strong>${type}</strong>
-                                <p>${item}</p>
+                                <p>${escapeHtml(item)}</p>
                             </div>
                         </div>
                     `;
@@ -398,7 +449,7 @@ form.addEventListener("submit", async function(event) {
                         <article class="source-item">
 
                             <strong>
-                                ${source.source_doc || "Agricultural guide"}
+                                ${escapeHtml(source.source_doc || "Agricultural guide")}
                             </strong>
 
                             <span>
@@ -406,7 +457,7 @@ form.addEventListener("submit", async function(event) {
                             </span>
 
                             <p>
-                                ${source.text || ""}
+                                ${escapeHtml(source.text || "")}
                             </p>
 
                         </article>
@@ -435,14 +486,14 @@ form.addEventListener("submit", async function(event) {
                 predictions.map(function(item) {
 
                     const label =
-                        String(item.raw_class || "")
-                            .replace(/___/g, " / ")
-                            .replace(/_/g, " ");
+                        [item.crop, item.disease]
+                            .filter(function(value) { return value && value !== "None (Healthy)"; })
+                            .join(" / ") || "Unidentified class";
 
                     return `
                         <div class="prediction-item">
 
-                            <span>${label}</span>
+                            <span>${escapeHtml(label)}</span>
 
                             <b>
                                 ${item.confidence}%
@@ -479,5 +530,5 @@ form.addEventListener("submit", async function(event) {
 
 });
 </script>
-+</body>
-+</html>
+</body>
+</html>

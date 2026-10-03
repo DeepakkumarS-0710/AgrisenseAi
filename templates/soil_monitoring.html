@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGriSense - Soil Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">🌱</span>
+            <div>
+                <div class="logo-title">AGriSense</div>
+                <div class="logo-subtitle">Smart Agriculture Intelligence</div>
+            </div>
+        </div>
+        <nav aria-label="Main navigation">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/soil-monitoring" class="nav-link active">Soil Monitor</a>
+            <a href="/crop-analysis" class="nav-link">Crop Analysis</a>
+            <a href="/disease-detection" class="nav-link">Disease Detection</a>
+            <a href="/advisor" class="nav-link">AI Advisor</a>
+            <a href="/history" class="nav-link">History</a>
+            <a href="/logout" class="nav-link logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <main class="monitoring-page">
+        <section class="monitor-hero">
+            <div>
+                <p class="eyebrow">PHASE 2 · FIELD SENSOR MONITORING</p>
+                <h1>Soil health, over time</h1>
+                <p>Follow incoming readings across the week and get careful, practical checks for your field.</p>
+            </div>
+            <div class="monitor-hero-actions">
+                <span class="monitor-live" id="monitor-live"><i></i> Connecting to sensors</span>
+                <button type="button" id="refresh-monitor" class="monitor-refresh">↻ Refresh readings</button>
+            </div>
+        </section>
+
+        <section class="monitor-summary-grid" aria-label="Weekly monitoring summary">
+            <article class="monitor-summary-card monitor-condition-card">
+                <span class="monitor-card-label">Weekly soil review</span>
+                <strong id="weekly-condition">Loading</strong>
+                <span id="weekly-coverage">Checking sensor history</span>
+            </article>
+            <article class="monitor-summary-card">
+                <span class="monitor-card-label">Readings reviewed</span>
+                <strong id="weekly-reading-count">—</strong>
+                <span>Most recent packets in the 7-day window</span>
+            </article>
+            <article class="monitor-summary-card">
+                <span class="monitor-card-label">Days with readings</span>
+                <strong id="weekly-days-count">—</strong>
+                <span>During the last 7 days</span>
+            </article>
+            <article class="monitor-summary-card">
+                <span class="monitor-card-label">Last sensor update</span>
+                <strong id="last-reading-time">Waiting</strong>
+                <span id="last-reading-age">No recent sensor packet</span>
+            </article>
+        </section>
+
+        <section class="monitor-grid">
+            <article class="monitor-panel monitor-trend-panel">
+                <div class="monitor-panel-head">
+                    <div>
+                        <p class="monitor-overline">YOUR FIELD · LAST 7 DAYS</p>
+                        <h2>Sensor trends</h2>
+                    </div>
+                    <label class="monitor-select-label" for="metric-select">Show trend</label>
+                    <select id="metric-select" class="monitor-select">
+                        <option value="soil_moisture">Soil moisture</option>
+                        <option value="ph">Soil pH</option>
+                        <option value="temperature">Air temperature</option>
+                        <option value="humidity">Air humidity</option>
+                        <option value="nitrogen">Nitrogen</option>
+                        <option value="phosphorus">Phosphorus</option>
+                        <option value="potassium">Potassium</option>
+                        <option value="rainfall">Rainfall</option>
+                    </select>
+                </div>
+                <div class="monitor-chart-heading">
+                    <div>
+                        <strong id="chart-latest-value">—</strong>
+                        <span id="chart-metric-label">Soil moisture</span>
+                    </div>
+                    <span id="chart-sample-count">No readings yet</span>
+                </div>
+                <div class="monitor-chart-wrap" id="chart-wrap">
+                    <svg id="sensor-chart" role="img" aria-label="Weekly sensor trend chart"></svg>
+                    <div id="chart-empty" class="monitor-chart-empty">
+                        <span>◌</span>
+                        <strong>Your weekly trend will appear here</strong>
+                        <p>Connect a sensor or submit a reading to start tracking.</p>
+                    </div>
+                </div>
+                <p class="monitor-chart-note" id="chart-note">Readings are plotted as received. Gaps mean the sensor did not report a value.</p>
+            </article>
+
+            <article class="monitor-panel monitor-latest-panel">
+                <div class="monitor-panel-head">
+                    <div>
+                        <p class="monitor-overline">LATEST RECEIVED VALUES</p>
+                        <h2>Field snapshot</h2>
+                    </div>
+                    <span class="monitor-unit-note">No values are filled in for missing sensors</span>
+                </div>
+                <div class="monitor-reading-grid" id="latest-reading-grid"></div>
+            </article>
+        </section>
+
+        <section class="monitor-panel monitor-actions-panel">
+            <div class="monitor-panel-head">
+                <div>
+                    <p class="monitor-overline">PRACTICAL NEXT STEPS</p>
+                    <h2>Weekly soil actions</h2>
+                </div>
+                <span class="monitor-action-note">Based on the readings received</span>
+            </div>
+            <div id="soil-actions" class="monitor-actions-list">
+                <div class="monitor-loading">Reviewing this week's sensor data…</div>
+            </div>
+        </section>
+
+        <details class="monitor-connection">
+            <summary>Connect a sensor gateway</summary>
+            <div>
+                <p>Send JSON readings to <code>POST /api/sensors</code>. Include only values your hardware actually measures; omitted fields remain blank.</p>
+                <p>The dashboard checks for new data every minute while it is open. Sensor moisture is treated separately from air humidity.</p>
+            </div>
+        </details>
+        <p class="monitor-disclaimer" id="coverage-note">
+            Soil pH and moisture checks are screening indicators. Crop stage, soil type and probe calibration affect interpretation; confirm nutrient and amendment decisions with a soil test and local agricultural advice.
+        </p>
+    </main>
+    <script src="{{ url_for('static', filename='js/soil_monitoring.js') }}"></script>
+</body>
+</html>

@@ -35,7 +35,8 @@ def run_multimodal_analysis(
     phosphorus=50,
     potassium=50,
     rainfall=100,
-    image_path=None
+    image_path=None,
+    crop_hint=None
 ):
     """
     Complete AgriSense multimodal analysis.
@@ -267,9 +268,24 @@ def run_multimodal_analysis(
 
         try:
 
-            disease_res = predict_disease(
-                image_path
-            )
+            if crop_hint:
+                disease_res = predict_disease(
+                    image_path,
+                    crop_hint=crop_hint
+                )
+            else:
+                disease_res = {
+                    "crop": "Not selected",
+                    "disease": "Choose the crop before image review",
+                    "health_status": "Crop selection required",
+                    "confidence": 0.0,
+                    "reliability": "Unavailable",
+                    "interpretation": (
+                        "No disease label was produced because the crop was not selected. "
+                        "Choose a supported crop and analyze the leaf again."
+                    ),
+                    "top5_predictions": []
+                }
 
         except Exception as e:
 
@@ -549,4 +565,3 @@ if __name__ == "__main__":
     print(
         "Multimodal Analysis Test Completed"
     )
-
